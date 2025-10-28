@@ -58,13 +58,8 @@ class MarioParty7Context(CommonContext):
         :param password_requested: Whether the server requires a password. Defaults to `False`.
         """
         if password_requested and not self.password:
-            await super().server_auth(password_requested)
-        if not self.auth:
-            if self.awaiting_rom:
-                return
-            self.awaiting_rom = True
-            logger.info("Awaiting connection to Dolphin to get player information.")
-            return
+            await super(MarioParty7Context, self).server_auth(password_requested)
+        await self.get_username()
         await self.send_connect()
 
 async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
