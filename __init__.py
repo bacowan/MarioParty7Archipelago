@@ -1,5 +1,9 @@
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess
+from .items import item_classifications, MarioParty7Item, item_name_to_id, create_items
+from .locations import all_locations, location_name_to_id
+from .options import MarioParty7Options
+from .regions import create_regions
 
 
 class MarioParty7WebWorld(WebWorld):
@@ -10,8 +14,19 @@ class MarioParty7World(World):
     Mario Party 7
     """
     game = "Mario Party 7"
-    item_name_to_id = {}
-    location_name_to_id = {}
+    item_name_to_id = item_name_to_id
+    location_name_to_id = location_name_to_id
+    options_dataclass = MarioParty7Options
+    options: MarioParty7Options
+
+    def create_item(self, item: str):
+        return MarioParty7Item(item, self)
+
+    def create_regions(self) -> None:
+        create_regions(self.multiworld, self.options, self.player)
+
+    def create_items(self) -> None:
+        create_items(self)
 
 def launch_client():
     from .Mp7Client import main
