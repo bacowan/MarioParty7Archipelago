@@ -1,0 +1,11 @@
+# Hook into the code that comes up with dice display values.
+# The line after sets the memory value for dice display value to r0.
+# r14 doesn't appear to be in use here, so we'll hijack that.
+
+# set trampoline address
+lis r14, 0x8171
+ori r14, r14, 0xA2F0
+
+# put the address in the ctr and jump there
+mtctr r14
+bctr

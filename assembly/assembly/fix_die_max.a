@@ -1,0 +1,31 @@
+# The dice display value is set to r0, so that's our output register.
+# r15 doesn't seem to be in use, so we'll hijack that.
+# We will use register r14 from the call-site too.
+
+# load the current player into memory
+lis r15, 0x805D
+lbz r14, 0x3B80(r15)
+
+# check if the current player is p1
+cmpwi r14, 1
+bne default
+
+# set the die value to 1
+li r0, 0
+b end
+
+# overwritten code from the callsite that will handle the default case
+default:
+rlwinm r0, r3, 1, 0, 30
+addi r3, r1, 44
+lhax r0, r3, r0
+
+end:
+# set the value in memory (this is copied from the callsite)
+sth r0, 0x0054(r29)
+
+# go back to the callsite
+lis r14, 0x8018
+ori r14, r14, 0xCC94
+mtctr r14
+bctr
