@@ -6,6 +6,8 @@ import dolphin_memory_engine
 import traceback
 from typing import TYPE_CHECKING, Any, Optional
 
+from worlds.mp7.assembly.patch import apply_patches
+
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a ROM for Mario Party 7. Trying again in 5 seconds..."
 )
@@ -78,7 +80,6 @@ async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
         try:
             if dolphin_memory_engine.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
                 sleep_time = 0.1
-                dolphin_memory_engine.write_byte(0x80290DB7, 10)
                 if ctx.slot is not None:
                     # wait for checks to come in to give to player
                     pass
@@ -101,6 +102,7 @@ async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
                         logger.info(CONNECTION_CONNECTED_STATUS)
                         ctx.dolphin_status = CONNECTION_CONNECTED_STATUS
                         ctx.locations_checked = set()
+                        apply_patches()
                 else:
                     logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
                     ctx.dolphin_status = CONNECTION_LOST_STATUS

@@ -1,13 +1,23 @@
 # The dice display value is set to r0, so that's our output register.
-# r15 doesn't seem to be in use, so we'll hijack that.
-# We will use register r14 from the call-site too.
+# r17 doesn't seem to be in use, so we'll hijack that.
+# We will use register r18 from the call-site too.
 
-# load the current player into memory
-lis r15, 0x805D
-lbz r14, 0x3B80(r15)
+# load the current player number into r18
+lis r17, 0x805D
+lbz r18, 0x3B80(r17) # current player number is at 0x805D3B80
 
-# check if the current player is p1
-cmpwi r14, 1
+# the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
+# r18 will now store the full offset.
+mulli r18, r18, 0x110
+
+# load the cpu difficulty/is-player value into memory
+lis r17, 0x8029
+ori r17, r17, 0x0C98 # 0x80290C98 is where the first difficulty/is-player value is stored
+add r17, r17, r18 # add the offset to the base memory value
+lbz r17, 0(r17)
+
+# if it is a computer player, then skip to the end
+andi. r0, r17, 0x2000 # this bit will be set for CPUs but not human players
 bne default
 
 # set the die value to 1
@@ -25,7 +35,7 @@ end:
 sth r0, 0x0054(r29)
 
 # go back to the callsite
-lis r14, 0x8018
-ori r14, r14, 0xCC94
-mtctr r14
+lis r18, 0x8018
+ori r18, r18, 0xCC94
+mtctr r18
 bctr
