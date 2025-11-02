@@ -11,13 +11,15 @@ class Instructions(NamedTuple):
 # see https://wiibrew.org/wiki/DOL
 DOL_TEXT_OFFSETS_OFFSET = 0x0 # Where the Text offset data starts in the DOL
 DOL_TEXT_OFFSET_SIZE = 0x4 # Size of each Text offset
-DOL_TEXT_LOADING_ADDRESS_OFFSET = 0x4C # Where the text loading addresses are offset in the DOL
+DOL_TEXT_LOADING_ADDRESS_OFFSET = 0x48 # Where the text loading addresses are offset in the DOL
 DOL_TEXT_LOADING_ADDRESS_SIZE = 0x4 # Size of each text loading address
 DOL_DATA_OFFSETS_OFFSET = 0x1C # Where the data offset data starts in the DOL
 DOL_DATA_OFFSET_SIZE = 0x4 # Size of each data offset
 DOL_DATA_OFFSET_COUNT = 11 # Number of slots for data offsets
 DOL_SECTION_SIZE_OFFSET = 0x90 # Where the section sizes are offset in the DOL
 DOL_SECTION_SIZE_SIZE = 0x4 # Size of each section size
+DOL_BSS_ADDRESS_OFFSET = 0xD8
+DOL_BSS_ADDRESS_SIZE = 0x4
 
 # FST
 FST_OFFSET_OFFSET = 0x424
@@ -30,13 +32,16 @@ FST_ENTRY_NEXT_INDEX_SIZE = 0x4
 
 # Values specific to Mario Party 7
 DOL_OFFSET = 0x00020300 # Where the DOL starts in the ISO
+DOL_SIZE = 0x279580
 INITIAL_DATA_OFFSET = 0x23C780
 FST_OFFSET = 0x299900
 FST_SIZE = 0x51FA
+INITIAL_BSS_ADDRESS = 0x80277980
 
 GAME_ID = b"GP7E01"
-
 OUTPUT_FILE_NAME = "MarioParty7_patched.iso"
+
+INJECTED_CODE_LOCATION = 0x802F8000
 
 def overwrite_assembly(input_file: IO, output_file: IO):
     # Load the binary to append
@@ -48,40 +53,38 @@ def append_assembly(input_file: IO, output_file: IO):
 
 def apply_patches(input_file: IO, output_file: IO):
     # Start by copying everything up until the end of the dol code
-    output_file.write(input_file.read(INITIAL_DATA_OFFSET))
+    output_file.write(input_file.read(DOL_OFFSET + DOL_SIZE))
+    new_code_location = output_file.tell()
 
     # Append the new code
     binary_code_file_path = os.path.join(os.path.dirname(__file__), "assembly", "bin", "appended_code")
     new_code_size = os.path.getsize(binary_code_file_path)
-    new_code_size = new_code_size + (0x20 - (new_code_size % 0x20)) # things should be 0x20 aligned
+    padding_bytes = 0x20 - (new_code_size % 0x20)
+    new_code_size = new_code_size + padding_bytes # things should be 0x20 aligned
     new_code_size_bytes = new_code_size.to_bytes(DOL_DATA_OFFSET_SIZE, byteorder="big")
-    # with (open(binary_code_file_path, "rb")) as new_code_file:
-    #     output_file.write(new_code_file.read())
+    with (open(binary_code_file_path, "rb")) as new_code_file:
+        output_file.write(new_code_file.read())
+    output_file.write(b'\x00' * padding_bytes)
 
     # append the rest of the iso
-    input_file.seek(INITIAL_DATA_OFFSET)
-    output_file.seek(INITIAL_DATA_OFFSET + new_code_size)
+    # input_file.seek(new_code_location)
+    # output_file.seek(new_code_location + new_code_size)
     output_file.write(input_file.read())
 
     # update the dol with the new code offsets and new data offsets
-    # # text offset
-    # text_section_ordinal = 2 # In Mario Party 7, only text sections 0 and 1 are in use, so we'll hijack section 2
-    # output_file.seek(DOL_OFFSET + DOL_TEXT_OFFSETS_OFFSET + DOL_TEXT_OFFSET_SIZE * text_section_ordinal)
-    # output_file.write(INITIAL_DATA_OFFSET.to_bytes(4, byteorder="big"))
-    #
-    # # text size
-    # output_file.seek(DOL_OFFSET + DOL_SECTION_SIZE_OFFSET + DOL_SECTION_SIZE_SIZE * text_section_ordinal)
-    # output_file.write(new_code_size.to_bytes(4, byteorder="big"))
+    # text offset
+    text_section_ordinal = 2 # In Mario Party 7, only text sections 0 and 1 are in use, so we'll hijack section 2
+    output_file.seek(DOL_OFFSET + DOL_TEXT_OFFSETS_OFFSET + DOL_TEXT_OFFSET_SIZE * text_section_ordinal)
+    output_file.write(DOL_SIZE.to_bytes(4, byteorder="big"))
 
-    # go through each data offset and increment it to match the new offset
-    for i in range(0, DOL_DATA_OFFSET_COUNT):
-        data_offset_offset = DOL_OFFSET + DOL_DATA_OFFSETS_OFFSET + DOL_DATA_OFFSET_SIZE * i
-        input_file.seek(data_offset_offset)
-        data_offset_bytes = input_file.read(DOL_DATA_OFFSET_SIZE)
-        data_offset = int.from_bytes(data_offset_bytes, byteorder="big", signed=False)
-        if data_offset != 0:
-            output_file.seek(data_offset_offset)
-            output_file.write((data_offset + new_code_size).to_bytes(DOL_DATA_OFFSET_SIZE, byteorder="big"))
+    # text size
+    output_file.seek(DOL_OFFSET + DOL_SECTION_SIZE_OFFSET + DOL_SECTION_SIZE_SIZE * text_section_ordinal)
+    output_file.write(new_code_size.to_bytes(4, byteorder="big"))
+
+    # load address
+    output_file.seek(DOL_OFFSET + DOL_TEXT_LOADING_ADDRESS_OFFSET + DOL_TEXT_LOADING_ADDRESS_SIZE * text_section_ordinal)
+    output_file.write(INJECTED_CODE_LOCATION.to_bytes(4, byteorder="big"))
+
 
     # update the FST pointer in the same way
     new_fst_offset = FST_OFFSET + new_code_size
@@ -104,9 +107,13 @@ def apply_patches(input_file: IO, output_file: IO):
                 fst_entry[FST_ENTRY_FILE_OFFSET_OFFSET:FST_ENTRY_FILE_OFFSET_OFFSET + FST_ENTRY_FILE_OFFSET_SIZE],
                 byteorder="big",
                 signed=False) # bytes 4-8 represent the file offset
-            if offset > INITIAL_DATA_OFFSET:
+            if offset > DOL_SIZE:
                 output_file.seek(fst_entry_offset + FST_ENTRY_FILE_OFFSET_OFFSET)
                 output_file.write((offset + new_code_size).to_bytes(FST_ENTRY_FILE_OFFSET_SIZE, byteorder="big"))
+
+    # update the bss location
+    # output_file.seek(DOL_OFFSET + DOL_BSS_ADDRESS_OFFSET)
+    # output_file.write((INJECTED_CODE_LOCATION + new_code_size + 0x20).to_bytes(DOL_BSS_ADDRESS_SIZE, byteorder="big"))
 
 def main():
     iso_path = Utils.open_filename("Path to unpatched ISO", [("ISO", [".iso"])])
