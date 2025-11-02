@@ -1,3 +1,7 @@
+
+# ------------------------ fix_die_max ------------------------------
+# ------------------------ 0x8171A2F0 -------------------------------
+
 # The dice display value is set to r0, so that's our output register.
 # r17 doesn't seem to be in use, so we'll hijack that.
 # We will use register r18 from the call-site too.

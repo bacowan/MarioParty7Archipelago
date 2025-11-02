@@ -4,9 +4,9 @@ import asyncio
 import Utils
 import dolphin_memory_engine
 import traceback
-from typing import TYPE_CHECKING, Any, Optional
+from typing import Optional
 
-from worlds.mp7.assembly.patch import apply_patches
+from worlds.mp7.patch import apply_patches
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a ROM for Mario Party 7. Trying again in 5 seconds..."
