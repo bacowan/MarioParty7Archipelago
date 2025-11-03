@@ -1,2 +1,3 @@
-filename,offset
-fix_die_max_hook,8018cc84
+filename,iso_offset,memory_offset
+fix_die_max_hook,1A9D24,8018cc84
+fix_die_max,20920,80003620

@@ -3,8 +3,8 @@
 # r17 doesn't appear to be in use here, so we'll hijack that.
 
 # set trampoline address
-lis r17, 0x8171
-ori r17, r17, 0xA2F0
+lis r17, 0x8000
+ori r17, r17, 0x3620
 
 # put the address in the ctr and jump there
 mtctr r17
