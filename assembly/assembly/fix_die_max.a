@@ -17,7 +17,14 @@ add r17, r17, r18 # add the offset to the base memory value
 lbz r17, 0(r17)
 
 # if it is a computer player, then skip to the end
-andi. r0, r17, 0x2000 # this bit will be set for CPUs but not human players
+andi. r0, r17, 0x20 # this bit will be set for CPUs but not human players
+bne default
+
+# if the flag for 1 dice block is not set, then skip to the end
+lis r17, 0x8172
+ori r17, r17, 0x0000
+lbz r17, 0(r17)
+andi. r0, r17, 0x01
 bne default
 
 # set the die value to 1

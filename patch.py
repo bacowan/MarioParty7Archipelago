@@ -21,6 +21,8 @@ DOL_SECTION_SIZE_OFFSET = 0x90 # Where the section sizes are offset in the DOL
 DOL_SECTION_SIZE_SIZE = 0x4 # Size of each section size
 DOL_BSS_ADDRESS_OFFSET = 0xD8
 DOL_BSS_ADDRESS_SIZE = 0x4
+DOL_BSS_SIZE_OFFSET = 0xDC
+DOL_BSS_SIZE_SIZE = 0x4
 
 # FST
 FST_OFFSET_OFFSET = 0x424
@@ -38,13 +40,14 @@ INITIAL_DATA_OFFSET = 0x23C780
 FST_OFFSET = 0x299900
 FST_SIZE = 0x51FA
 INITIAL_BSS_ADDRESS = 0x80277980
+INITIAL_BSS_SIZE = 0x80610
 
 GAME_ID = b"GP7E01"
 OUTPUT_FILE_NAME = "MarioParty7_patched.iso"
-
+BSS_SIZE_INCREASE = 0x10 # RAM used for our hack
 INJECTED_CODE_LOCATION = 0x802F8000
 
-# TODO: next attempt: instead of a new text section, just reuse one that's already there
+
 
 def apply_patches(iso_file: IO):
     with open(os.path.join(os.path.dirname(__file__), "assembly", "assembly_offsets.csv"), "r") as csv_file:
