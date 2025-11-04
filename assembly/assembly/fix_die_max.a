@@ -2,6 +2,11 @@
 # r17 doesn't seem to be in use, so we'll hijack that.
 # We will use register r18 from the call-site too.
 
+# Overwritten code from the callsite that will handle the default case
+rlwinm r0, r3, 1, 0, 30
+addi r3, r1, 44
+lhax r0, r3, r0
+
 # load the current player number into r18
 lis r17, 0x805D
 lbz r18, 0x3B80(r17) # current player number is at 0x805D3B80
@@ -17,27 +22,43 @@ add r17, r17, r18 # add the offset to the base memory value
 lbz r17, 0(r17)
 
 # if it is a computer player, then skip to the end
-andi. r0, r17, 0x20 # this bit will be set for CPUs but not human players
-bne default
+andi. r17, r17, 0x20 # this bit will be set for CPUs but not human players
+bne end
 
-# if the flag for 10 dice block is set, then skip to the end
+# dice values are as follows:
+# 0b 0000 0000 # can only roll 1
+# 0b 0000 0001 # can roll 1 or 2
+# 0b 0000 0010 # can roll 1-5
+# 0b 0000 0011 # can roll normally
+
+# load the max dice roll value
 lis r17, 0x8172
 ori r17, r17, 0x0000
 lbz r17, 0(r17)
-andi. r0, r17, 0x01
-bne default
 
-# set the die value to 1
+# can only roll 1
+cmpwi r17, 0
+bne roll2
 li r0, 0
 b end
 
-# overwritten code from the callsite that will handle the default case
-default:
-rlwinm r0, r3, 1, 0, 30
-addi r3, r1, 44
-lhax r0, r3, r0
+# can only roll 1 or 2
+roll2:
+cmpwi r17, 1
+bne roll5
+li r19, 1
+and r0, r0, r19 # only take the last bit so that we get 0 or 1 (which gets one added to it)
+b end
+
+# can only roll 1-5
+roll5:
+cmpwi r17, 2
+bne end
+li r19, 1
+srw r0, r0, r19 # bit shift right to divide by 2
 
 end:
+
 # set the value in memory (this is copied from the callsite)
 sth r0, 0x0054(r29)
 
