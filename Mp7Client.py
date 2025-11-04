@@ -6,7 +6,11 @@ import dolphin_memory_engine
 import traceback
 from typing import Optional
 
+from NetUtils import NetworkItem
+from worlds.mp7.client_item_handler import handle_item
 from worlds.mp7.patch import apply_patches
+
+ITEM_COUNT_SAVE_LOCATION = 0x8029D70A # This is in the save file right after the date. I don't _think_ it's being used.
 
 CONNECTION_REFUSED_GAME_STATUS = (
     "Dolphin failed to connect. Please load a ROM for Mario Party 7. Trying again in 5 seconds..."
@@ -52,6 +56,7 @@ class MarioParty7Context(CommonContext):
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status: str = CONNECTION_INITIAL_STATUS
         self.awaiting_rom: bool = False
+        self.item_received_count: int = 0
 
     async def server_auth(self, password_requested: bool = False) -> None:
         """
@@ -64,6 +69,21 @@ class MarioParty7Context(CommonContext):
         await self.get_username()
         await self.send_connect()
 
+    def on_connection(self):
+        # do any setup related to the save file and rom itself
+        self.item_received_count = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION)
+
+    async def update_game_state(self) -> None:
+        # Go through each new item and handle it
+        for item in self.items_received[self.item_received_count:]:
+            await handle_item(item)
+
+        # Update the number of items received in the save file
+        if self.item_received_count < len(self.items_received):
+            self.item_received_count = len(self.items_received)
+            dolphin_memory_engine.write_word(ITEM_COUNT_SAVE_LOCATION, self.item_received_count)
+
+# connect to dolphin and poll to make sure the connection is live
 async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
     sleep_time = 0.0
@@ -81,8 +101,8 @@ async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
             if dolphin_memory_engine.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
                 sleep_time = 0.1
                 if ctx.slot is not None:
-                    # wait for checks to come in to give to player
-                    pass
+                    # wait for items and checks
+                    await ctx.update_game_state()
                 elif ctx.awaiting_rom:
                     await ctx.server_auth()
             else:
@@ -92,7 +112,6 @@ async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
                 logger.info("Attempting to connect to Dolphin...")
                 dolphin_memory_engine.hook()
                 if dolphin_memory_engine.is_hooked():
-                    logger.info(dolphin_memory_engine.read_bytes(0x80000000, 6))
                     if dolphin_memory_engine.read_bytes(0x80000000, 6) != b"GP7E01":
                         logger.info(CONNECTION_REFUSED_GAME_STATUS)
                         ctx.dolphin_status = CONNECTION_REFUSED_GAME_STATUS
@@ -101,8 +120,7 @@ async def dolphin_sync_task(ctx: MarioParty7Context) -> None:
                     else:
                         logger.info(CONNECTION_CONNECTED_STATUS)
                         ctx.dolphin_status = CONNECTION_CONNECTED_STATUS
-                        ctx.locations_checked = set()
-                        apply_patches()
+                        ctx.on_connection()
                 else:
                     logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
                     ctx.dolphin_status = CONNECTION_LOST_STATUS
