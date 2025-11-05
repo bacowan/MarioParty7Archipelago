@@ -20,7 +20,14 @@ progression_items = [
     "Board Event Menu Navigation",
     "Minigame Jump",
     "Minigame Run",
-    "Minigame Mash"
+    "Minigame Mash",
+    "Grand Canal",
+    "Pagoda Peak",
+    "Pyramid Park",
+    "Neon Heights",
+    "Windmillville",
+    "Bower's Enchanted Inferno",
+
 ]
 
 useful_items = [

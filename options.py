@@ -35,7 +35,7 @@ class LockedMinigameActions(Toggle):
     default = True
 
 class CoinCountsAsChecks(Toggle):
-    """Having 10, 20, 30, 40, 50, 60, 70, 80, 90, and 100 coins at any given time are all checks"""
+    """Having 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 150, and 200 coins at any given time are all checks"""
     display_name = "Coin Counts as Checks"
     default = True
 
@@ -45,8 +45,8 @@ class RandomizeStageOrder(Toggle):
     default = True
 
 class MinigameSanity(Toggle):
-    """Each minigame is its own check. Only one minigame is unlocked to begin with, and further
-    minigames are unlocked via checks"""
+    """Each minigame is its own check. Until all minigames have been beaten,
+    the minigame roulette will prioritize minigames than have yet to be beaten"""
     display_name = "Minigame Sanity"
     default = True
 
@@ -63,12 +63,12 @@ class ShopSanity(Toggle):
 class SpaceSanity(Choice):
     """Landing on spaces count as checks
     All means that each space is a check
-    Every 10 means that every 10 unique spaces landed on is a check"""
+    Every 20 means that every 20 unique spaces landed on is a check"""
     display_name = "Space Sanity"
     default = 0
     option_off = 0
     option_all = 1
-    option_every_10 = 2
+    option_every_20 = 2
 
 class RandomizeBoardSpaces(Toggle):
     """Board spaces are randomized"""
