@@ -1,6 +1,5 @@
 from BaseClasses import Location, Region
 
-
 class MarioParty7Location(Location):
     game: str = "Mario Party 7"
 
