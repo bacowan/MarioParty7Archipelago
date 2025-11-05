@@ -60,15 +60,10 @@ class ShopSanity(Toggle):
     display_name = "Shop Sanity"
     default = False
 
-class SpaceSanity(Choice):
-    """Landing on spaces count as checks
-    All means that each space is a check
-    Every 20 means that every 20 unique spaces landed on is a check"""
+class SpaceSanity(Toggle):
+    """Every 20 spaces past counts as a check"""
     display_name = "Space Sanity"
-    default = 0
-    option_off = 0
-    option_all = 1
-    option_every_20 = 2
+    default = False
 
 class RandomizeBoardSpaces(Toggle):
     """Board spaces are randomized"""

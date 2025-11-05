@@ -8,8 +8,22 @@ def add_location(name: str, reg: Region):
     location = MarioParty7Location(reg.player, name, location_name_to_id[name], reg)
     reg.locations += [location]
 
-all_locations = [
-    "Beat Minigame",
+coin_count_locations = [
+    "10 Coins in Wallet",
+    "20 Coins in Wallet",
+    "30 Coins in Wallet",
+    "40 Coins in Wallet",
+    "50 Coins in Wallet",
+    "60 Coins in Wallet",
+    "70 Coins in Wallet",
+    "80 Coins in Wallet",
+    "90 Coins in Wallet",
+    "100 Coins in Wallet",
+    "150 Coins in Wallet",
+    "200 Coins in Wallet"
+]
+
+space_locations = [
     "20 Unique Spaces",
     "40 Unique Spaces",
     "60 Unique Spaces",
@@ -24,19 +38,10 @@ all_locations = [
     "240 Unique Spaces",
     "260 Unique Spaces",
     "280 Unique Spaces",
-    "300 Unique Spaces",
-    "10 Coins in Wallet",
-    "20 Coins in Wallet",
-    "30 Coins in Wallet",
-    "40 Coins in Wallet",
-    "50 Coins in Wallet",
-    "60 Coins in Wallet",
-    "70 Coins in Wallet",
-    "80 Coins in Wallet",
-    "90 Coins in Wallet",
-    "100 Coins in Wallet",
-    "150 Coins in Wallet",
-    "200 Coins in Wallet",
+    "300 Unique Spaces"
+]
+
+minigame_locations = [
     "Warp Pipe Dreams Beaten",
     "Weight For It Beaten",
     "Mad Props Beaten",
@@ -47,13 +52,18 @@ all_locations = [
     "Royal Rumpus Beaten",
     "Light Speed Beaten",
     "Apes of Wrath Beaten",
-    "Fish And Cheeps Beaten",
-    "Camp Ukiki Beaten",
+    "Fish And Cheeps Beaten"
+]
+
+board_locations = [
     "Grand Canal Beaten",
     "Pagoda Peak Beaten",
     "Pyramid Park Beaten",
     "Neon Heights Beaten",
-    "Windmillville Beaten",
+    "Windmillville Beaten"
+]
+
+orb_hut_locations = [
     "Grand Canal Orb Hut 1 Left Item",
     "Grand Canal Orb Hut 1 Middle Item",
     "Grand Canal Orb Hut 1 Right Item",
@@ -83,7 +93,9 @@ all_locations = [
     "Bowser's Enchanted Inferno Orb Hut 1 Right Item",
     "Bowser's Enchanted Inferno Orb Hut 2 Left Item",
     "Bowser's Enchanted Inferno Orb Hut 2 Middle Item",
-    "Bowser's Enchanted Inferno Orb Hut 2 Right Item",
+    "Bowser's Enchanted Inferno Orb Hut 2 Right Item"
 ]
+
+all_locations = coin_count_locations + space_locations + minigame_locations + board_locations + orb_hut_locations
 
 location_name_to_id = {name: address for address, name in enumerate(all_locations, 1)}
