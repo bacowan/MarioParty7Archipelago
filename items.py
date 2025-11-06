@@ -12,12 +12,21 @@ class MarioParty7Item(Item):
         super().__init__(name, item_classifications[name], item_name_to_id[name], player)
 
 def create_items(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
-    world.itempool.append(MarioParty7Item("Grand Canal", player))
-    world.itempool.append(MarioParty7Item("Pagoda Peak", player))
-    world.itempool.append(MarioParty7Item("Pyramid Park", player))
-    world.itempool.append(MarioParty7Item("Neon Heights", player))
-    world.itempool.append(MarioParty7Item("Windmillville", player))
-    world.itempool.append(MarioParty7Item("Bower's Enchanted Inferno", player))
+    stage_unlocks = [
+        MarioParty7Item("Grand Canal", player),
+        MarioParty7Item("Pagoda Peak", player),
+        MarioParty7Item("Pyramid Park", player),
+        MarioParty7Item("Neon Heights", player),
+        MarioParty7Item("Windmillville", player),
+    ]
+
+    # unlock one level at the start, then add the rest as regular items
+    initial_level = random.choice(stage_unlocks)
+    world.push_precollected(initial_level)
+    stage_unlocks.remove(initial_level)
+    stage_unlocks.append(MarioParty7Item("Bower's Enchanted Inferno", player))
+    for stage in stage_unlocks:
+        world.itempool.append(stage)
 
     if options.dice_block_progression.value:
         for _ in range(4):

@@ -2,7 +2,9 @@ from Options import Toggle, PerGameCommonOptions, Choice
 from dataclasses import dataclass
 
 class DiceBlockProgression(Toggle):
-    """Starts you off with a dice block that can only roll a 1. Better dice blocks are unlocked as items"""
+    """Starts you off with a dice block that can only roll a 1. Better dice blocks are unlocked as items.
+    If this option is set, then Minigame Sanity must also be set in order to prevent the seed
+    from becoming incompletable"""
     display_name = "Dice Block Progression"
     default = True
 
@@ -11,7 +13,9 @@ class WalletProgression(Choice):
     Easy has wallet sizes of 30, 50, 100, and 999
     Medium has wallet sizes of 0, 20, 50, 100, and 999
     Hard has wallet sizes of 0, 5, 10, 20, 50, 100, and 999
-    Off has only a wallet of 999"""
+    Off has only a wallet of 999
+    If this option is set, then Minigame Sanity must also be set in order to prevent the seed
+    from becoming incompletable"""
     display_name = "Wallet Progression"
     default = 0
     option_off = 0
