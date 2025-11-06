@@ -41,33 +41,33 @@ def create_items(world: MultiWorld, options: MarioParty7Options, player: int) ->
 
     if options.dice_block_progression.value:
         for _ in range(4):
-            world.itempool.append(MarioParty7Item("Progressive Dice Block", player))
+            world.itempool.append(create_item("Progressive Dice Block", player))
 
     if options.wallet_progression.value == WalletProgression.option_easy:
         for _ in range(4):
-            world.itempool.append(MarioParty7Item("Progressive Wallet", player))
+            world.itempool.append(create_item("Progressive Wallet", player))
     elif options.wallet_progression.value == WalletProgression.option_medium:
         for _ in range(5):
-            world.itempool.append(MarioParty7Item("Progressive Wallet", player))
+            world.itempool.append(create_item("Progressive Wallet", player))
     elif options.wallet_progression.value == WalletProgression.option_hard:
         for _ in range(7):
-            world.itempool.append(MarioParty7Item("Progressive Wallet", player))
+            world.itempool.append(create_item("Progressive Wallet", player))
 
     if options.locked_menu_navigation.value:
-        world.itempool.append(MarioParty7Item("Shop Menu Navigation", player))
-        world.itempool.append(MarioParty7Item("Star Purchase Menu Navigation", player))
-        world.itempool.append(MarioParty7Item("Board Event Menu Navigation", player))
+        world.itempool.append(create_item("Shop Menu Navigation", player))
+        world.itempool.append(create_item("Star Purchase Menu Navigation", player))
+        world.itempool.append(create_item("Board Event Menu Navigation", player))
 
     if options.locked_minigame_actions.value:
-        world.itempool.append(MarioParty7Item("Minigame Jump", player))
-        world.itempool.append(MarioParty7Item("Minigame Run", player))
-        world.itempool.append(MarioParty7Item("Minigame Mash", player))
+        world.itempool.append(create_item("Minigame Jump", player))
+        world.itempool.append(create_item("Minigame Run", player))
+        world.itempool.append(create_item("Minigame Mash", player))
 
     location_count = len([location for location in [region.locations for region in world.regions]])
     filler_count = location_count - len(world.itempool)
 
     for _ in range(filler_count):
-        world.itempool.append(MarioParty7Item(random.choice(filler_items), player))
+        world.itempool.append(create_item(random.choice(filler_items), player))
 
 
 progression_items = [

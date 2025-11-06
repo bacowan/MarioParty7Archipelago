@@ -8,10 +8,10 @@ def add_location(name: str, reg: Region):
     reg.locations += [location]
 
 def coin_count_location_name_to_value(name: str):
-    return name.split(" ")[0]
+    return int(name.split(" ")[0])
 
 def space_count_location_name_to_value(name: str):
-    return name.split(" ")[0]
+    return int(name.split(" ")[0])
 
 coin_count_locations = [
     "10 Coins in Wallet",
