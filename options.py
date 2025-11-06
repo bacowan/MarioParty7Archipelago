@@ -1,6 +1,18 @@
 from Options import Toggle, PerGameCommonOptions, Choice
 from dataclasses import dataclass
 
+class WinCondition(Choice):
+    """
+    Beat Bowser's Enchanted Inferno: All boards except for Bower's Enchanted Inferno are unlocked through checks.
+        Bowser's Enchanted Inferno will unlock after beating all other boards.
+        Your objective is to beat Bowser's Enchanted Inferno.
+    Beat All Stages: All boards are unlocked through checks. Your objective is to beat all boards.
+    """
+    display_name = "Win Condition"
+    default = 0
+    option_beat_bowsers_enchanted_inferno = 0
+    option_beat_all_stages = 1
+
 class DiceBlockProgression(Toggle):
     """Starts you off with a dice block that can only roll a 1. Better dice blocks are unlocked as items.
     If this option is set, then Minigame Sanity must also be set in order to prevent the seed
@@ -43,9 +55,9 @@ class CoinCountsAsChecks(Toggle):
     display_name = "Coin Counts as Checks"
     default = True
 
-class RandomizeStageOrder(Toggle):
+class RandomizeBoardOrder(Toggle):
     """If off, stages will be played in the default order. In on, the order of the stages will be randomized."""
-    display_name = "Randomize Stage Order"
+    display_name = "Randomize Board Order"
     default = True
 
 class MinigameSanity(Toggle):
@@ -53,11 +65,6 @@ class MinigameSanity(Toggle):
     the minigame roulette will prioritize minigames than have yet to be beaten"""
     display_name = "Minigame Sanity"
     default = True
-
-class BoardMinigameSanity(Toggle):
-    """Succeeding in on board minigames count as checks"""
-    display_name = "Board Minigame Sanity"
-    default = False
 
 class ShopSanity(Toggle):
     """Every item that you can buy in every stage is a check"""
@@ -76,17 +83,15 @@ class RandomizeBoardSpaces(Toggle):
 
 @dataclass
 class MarioParty7Options(PerGameCommonOptions):
+    win_condition: WinCondition
     dice_block_progression: DiceBlockProgression
     wallet_progression: WalletProgression
     capsule_capacity_progression: CapsuleCapacityProgression
     coin_counts_as_checks: CoinCountsAsChecks
     minigame_sanity: MinigameSanity
     shop_sanity: ShopSanity
-    board_sanity: BoardMinigameSanity
     space_sanity: SpaceSanity
-    board_minigame_sanity: BoardMinigameSanity
-    randomize_stage_order: RandomizeStageOrder
-    randomize_minigame_spaces: RandomizeBoardSpaces
+    randomize_board_order: RandomizeBoardOrder
     randomize_board_spaces: RandomizeBoardSpaces
     locked_minigame_actions: LockedMinigameActions
     locked_menu_navigation: LockedMenuNavigation

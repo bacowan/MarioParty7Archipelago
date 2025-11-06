@@ -20,4 +20,4 @@ def set_rules(world: MultiWorld, options: MarioParty7Options, player: int)  -> N
              lambda state: state.has("Bowser's Enchanted Inferno"))
 
     # coin checks
-    set_rule()
+    set_rule(world.get_location("10 Coins in Wallet", player))

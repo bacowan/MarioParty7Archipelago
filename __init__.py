@@ -37,7 +37,7 @@ class MarioParty7World(World):
         create_items(self.multiworld, self.options, self.player)
 
     def set_rules(self) -> None:
-        set_rules(self.multiworld, self.options)
+        set_rules(self.multiworld, self.options, self.player)
 
 def launch_client():
     from .Mp7Client import main

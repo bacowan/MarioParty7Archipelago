@@ -12,21 +12,29 @@ class MarioParty7Item(Item):
         super().__init__(name, item_classifications[name], item_name_to_id[name], player)
 
 def create_items(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
-    stage_unlocks = [
+    board_unlocks = [
         MarioParty7Item("Grand Canal", player),
         MarioParty7Item("Pagoda Peak", player),
         MarioParty7Item("Pyramid Park", player),
         MarioParty7Item("Neon Heights", player),
         MarioParty7Item("Windmillville", player),
+        MarioParty7Item("Bower's Enchanted Inferno", player)
     ]
 
-    # unlock one level at the start, then add the rest as regular items
-    initial_level = random.choice(stage_unlocks)
-    world.push_precollected(initial_level)
-    stage_unlocks.remove(initial_level)
-    stage_unlocks.append(MarioParty7Item("Bower's Enchanted Inferno", player))
-    for stage in stage_unlocks:
-        world.itempool.append(stage)
+    if options.win_condition.value == options.win_condition.option_beat_bowsers_enchanted_inferno:
+        # If the objective is to beat bowser's enchanted inferno, exclude it from the possible
+        # options for initial stage
+        initial_board_random_max_index = len(board_unlocks) - 2
+    else:
+        initial_board_random_max_index = len(board_unlocks) - 1
+
+    initial_board_random_index = random.randint(0, initial_board_random_max_index)
+    initial_board = board_unlocks[initial_board_random_index]
+    world.push_precollected(initial_board)
+    board_unlocks.remove(initial_board)
+
+    for board in board_unlocks:
+        world.itempool.append(board)
 
     if options.dice_block_progression.value:
         for _ in range(4):

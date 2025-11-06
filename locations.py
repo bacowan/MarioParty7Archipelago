@@ -59,7 +59,8 @@ board_locations = [
     "Pagoda Peak Beaten",
     "Pyramid Park Beaten",
     "Neon Heights Beaten",
-    "Windmillville Beaten"
+    "Windmillville Beaten",
+    "Bowser's Enchanted Inferno Beaten"
 ]
 
 orb_hut_locations = [
