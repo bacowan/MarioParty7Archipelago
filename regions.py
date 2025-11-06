@@ -1,6 +1,8 @@
 from BaseClasses import MultiWorld, Region
 from worlds.mp7 import MarioParty7Options
-from worlds.mp7.locations import add_location, space_locations, coin_count_locations, minigame_locations
+from worlds.mp7.items import create_event_item
+from worlds.mp7.locations import add_location, space_locations, coin_count_locations, minigame_locations, \
+    add_event_location
 
 
 def create_regions(world: MultiWorld, options: MarioParty7Options, player: int):
@@ -36,6 +38,15 @@ def create_boards(world: MultiWorld, menu_region: Region, options: MarioParty7Op
     add_location("Pyramid Park Beaten", pyramid_park)
     add_location("Neon Heights Beaten", neon_heights)
     add_location("Windmillville Beaten", windmillville)
+    if options.win_condition == options.win_condition.option_beat_all_stages:
+        add_location("Bowser's Enchanted Inferno Beaten", windmillville)
+
+    create_event("Grand Canal Beaten Event Item", "Grand Canal Beaten Event Location", grand_canal, player)
+    create_event("Pagoda Peak Beaten Event Item", "Pagoda Peak Beaten Event Location", pagoda_peak, player)
+    create_event("Pyramid Park Beaten Event Item", "Pyramid Park Beaten Event Location", pyramid_park, player)
+    create_event("Neon Heights Beaten Event Item", "Neon Heights Beaten Event Location", neon_heights, player)
+    create_event("Windmillville Beaten Event Item", "Windmillville Beaten Event Location", windmillville, player)
+    create_event("Bowser's Enchanted Inferno Beaten Event Item", "Bowser's Enchanted Inferno Beaten Event Location", bowsers_enchanted_inferno, player)
 
     if options.shop_sanity.value:
         add_location("Grand Canal Orb Hut 1 Left Item", grand_canal)
@@ -78,3 +89,8 @@ def create_board(name: str, menu_region: Region, world: MultiWorld, player: int)
     menu_region.connect(region)
     world.regions.append(region)
     return region
+
+def create_event(name: str, location_name: str, region: Region, player: int) -> None:
+    location = add_event_location(location_name, region)
+    item = create_event_item(name, player)
+    location.place_locked_item(item)

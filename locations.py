@@ -6,6 +6,12 @@ class MarioParty7Location(Location):
 def add_location(name: str, reg: Region):
     location = MarioParty7Location(reg.player, name, location_name_to_id[name], reg)
     reg.locations += [location]
+    return location
+
+def add_event_location(name: str, reg: Region):
+    location = MarioParty7Location(reg.player, name, None, reg)
+    reg.locations += [location]
+    return location
 
 def coin_count_location_name_to_value(name: str):
     return int(name.split(" ")[0])

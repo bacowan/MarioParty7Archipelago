@@ -78,7 +78,7 @@ class SpaceSanity(Toggle):
 
 class RandomizeBoardSpaces(Toggle):
     """Board spaces are randomized"""
-    display_name = "Board Space Randomization"
+    display_name = "Randomize Board Spaces"
     default = False
 
 @dataclass

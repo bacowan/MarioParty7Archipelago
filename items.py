@@ -11,7 +11,7 @@ class MarioParty7Item(Item):
 def create_item(name: str, player: int) -> MarioParty7Item:
     return MarioParty7Item(name, item_classifications[name], item_name_to_id[name], player)
 
-def create_event(name: str, player: int) -> MarioParty7Item:
+def create_event_item(name: str, player: int) -> MarioParty7Item:
     return MarioParty7Item(name, ItemClassification.progression, None, player)
 
 def create_items(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
@@ -21,7 +21,7 @@ def create_items(world: MultiWorld, options: MarioParty7Options, player: int) ->
         create_item("Pyramid Park", player),
         create_item("Neon Heights", player),
         create_item("Windmillville", player),
-        create_item("Bower's Enchanted Inferno", player)
+        create_item("Bowser's Enchanted Inferno", player)
     ]
 
     if options.win_condition.value == options.win_condition.option_beat_bowsers_enchanted_inferno:
@@ -63,11 +63,25 @@ def create_items(world: MultiWorld, options: MarioParty7Options, player: int) ->
         world.itempool.append(create_item("Minigame Run", player))
         world.itempool.append(create_item("Minigame Mash", player))
 
-    location_count = len([location for location in [region.locations for region in world.regions]])
+    location_count = 0
+    for _ in world.get_locations(player):
+        location_count += 1
+
     filler_count = location_count - len(world.itempool)
 
     for _ in range(filler_count):
         world.itempool.append(create_item(random.choice(filler_items), player))
+
+    # give some hints to the generator to avoid fill errors
+    # if options.dice_block_progression.value:
+    #     world.local_early_items[player]["Progressive Dice Block"] = 2
+    #
+    # if options.wallet_progression.value == options.wallet_progression.option_easy:
+    #     world.local_early_items[player]["Progressive Wallet"] = 1
+    # elif options.wallet_progression.value == options.wallet_progression.option_medium:
+    #     world.local_early_items[player]["Progressive Wallet"] = 2
+    # elif options.wallet_progression.value == options.wallet_progression.option_hard:
+    #     world.local_early_items[player]["Progressive Wallet"] = 3
 
 
 progression_items = [
@@ -83,7 +97,7 @@ progression_items = [
     "Pyramid Park",
     "Neon Heights",
     "Windmillville",
-    "Bower's Enchanted Inferno"
+    "Bowser's Enchanted Inferno"
 ]
 
 useful_items = [
