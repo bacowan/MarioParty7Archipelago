@@ -8,17 +8,20 @@ from .options import MarioParty7Options, WalletProgression
 class MarioParty7Item(Item):
     game: str = "Mario Party 7"
 
-    def __init__(self, name: str, player: int) -> None:
-        super().__init__(name, item_classifications[name], item_name_to_id[name], player)
+def create_item(name: str, player: int) -> MarioParty7Item:
+    return MarioParty7Item(name, item_classifications[name], item_name_to_id[name], player)
+
+def create_event(name: str, player: int) -> MarioParty7Item:
+    return MarioParty7Item(name, ItemClassification.progression, None, player)
 
 def create_items(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
     board_unlocks = [
-        MarioParty7Item("Grand Canal", player),
-        MarioParty7Item("Pagoda Peak", player),
-        MarioParty7Item("Pyramid Park", player),
-        MarioParty7Item("Neon Heights", player),
-        MarioParty7Item("Windmillville", player),
-        MarioParty7Item("Bower's Enchanted Inferno", player)
+        create_item("Grand Canal", player),
+        create_item("Pagoda Peak", player),
+        create_item("Pyramid Park", player),
+        create_item("Neon Heights", player),
+        create_item("Windmillville", player),
+        create_item("Bower's Enchanted Inferno", player)
     ]
 
     if options.win_condition.value == options.win_condition.option_beat_bowsers_enchanted_inferno:
@@ -102,3 +105,7 @@ item_classifications = {
 }
 
 item_name_to_id = {name: address for address, name in enumerate(item_classifications, 1)}
+
+item_name_groups = {
+    "Boards": { "Grand Canal", "Pyramid Park", "Neon Heights", "Windmillville", "Bower's Enchanted Inferno" }
+}

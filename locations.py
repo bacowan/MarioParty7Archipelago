@@ -7,6 +7,12 @@ def add_location(name: str, reg: Region):
     location = MarioParty7Location(reg.player, name, location_name_to_id[name], reg)
     reg.locations += [location]
 
+def coin_count_location_name_to_value(name: str):
+    return name.split(" ")[0]
+
+def space_count_location_name_to_value(name: str):
+    return name.split(" ")[0]
+
 coin_count_locations = [
     "10 Coins in Wallet",
     "20 Coins in Wallet",
@@ -51,7 +57,8 @@ minigame_locations = [
     "Royal Rumpus Beaten",
     "Light Speed Beaten",
     "Apes of Wrath Beaten",
-    "Fish And Cheeps Beaten"
+    "Fish And Cheeps Beaten",
+    "Camp Ukiki Beaten"
 ]
 
 board_locations = [

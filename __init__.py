@@ -1,7 +1,7 @@
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess
-from .items import item_classifications, MarioParty7Item, item_name_to_id, create_items
+from .items import item_classifications, MarioParty7Item, item_name_to_id, create_items, create_item, item_name_groups
 from .locations import all_locations, location_name_to_id
 from .options import MarioParty7Options
 from .regions import create_regions
@@ -20,6 +20,7 @@ class MarioParty7World(World):
     location_name_to_id = location_name_to_id
     options_dataclass = MarioParty7Options
     options: MarioParty7Options
+    item_name_groups = item_name_groups
 
     def generate_early(self):
         if self.options.wallet_progression and not self.options.minigame_sanity:
@@ -28,7 +29,7 @@ class MarioParty7World(World):
             raise OptionError("If Dice Block Progression is set then Minigame Sanity must also be set")
 
     def create_item(self, item: str):
-        return MarioParty7Item(item, self.player)
+        return create_item(item, self.player)
 
     def create_regions(self) -> None:
         create_regions(self.multiworld, self.options, self.player)
