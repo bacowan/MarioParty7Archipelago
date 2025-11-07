@@ -18,7 +18,7 @@ add     r17, r17, r18 # add the offset to the base memory value
 lbz     r17, 0(r17)
 
 # if it is a computer player then set the max coin count to 999
-andi. r17, r17, 0x20 # this bit will be set for CPUs but not human players
+andi.   r17, r17, 0x20 # this bit will be set for CPUs but not human players
 bne     common
 
 li      r20, 999
