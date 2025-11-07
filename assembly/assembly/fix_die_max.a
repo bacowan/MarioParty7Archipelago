@@ -8,8 +8,8 @@ addi r3, r1, 44
 lhax r0, r3, r0
 
 # load the current player number into r18
-lis r17, 0x805D
-lbz r18, 0x3B80(r17) # current player number is at 0x805D3B80
+lis r17, 0x8029
+lbz r18, 0x1522(r17) # current player number is at 0x805D3B80
 
 # the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
 # r18 will now store the full offset.
