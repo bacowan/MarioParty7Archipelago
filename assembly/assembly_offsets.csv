@@ -1,6 +1,6 @@
 filename,iso_offset,memory_offset
 fix_die_max_hook,1A9D24,8018cc84
-fix_die_max,20924,80003614
+fix_die_max,20924,80003624
 max_coin_count_1_hook,183D70,80166cd0
 max_coin_count_1,209B8,800036B8
 max_coin_count_2_hook,5BF34,8003ee94
