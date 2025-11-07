@@ -24,10 +24,26 @@ def set_rules(world: MultiWorld, options: MarioParty7Options, player: int) -> No
     if options.shop_sanity:
         set_shop_sanity_rules(world, options, player)
 
+def has_enough_money_for_shop_item(location_name: str, options: MarioParty7Options, state: CollectionState, player: int) -> bool:
+    # Left item will always be 5 coins, middle 10, right 20
+    if location_name.endswith("Left Item"):
+        return is_wallet_size_at_least(5, options, state, player)
+    if location_name.endswith("Middle Item"):
+        return is_wallet_size_at_least(10, options, state, player)
+    return is_wallet_size_at_least(20, options, state, player)
+
 def set_shop_sanity_rules(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
+
+    # Need to be able to navigate the shops in order to buy anything from them
     if options.locked_menu_navigation.value:
         for location in orb_hut_locations:
             add_rule(world.get_location(location, player), lambda state: state.has("Shop Menu Navigation", player))
+
+    # Make sure the player can afford the item
+    if options.wallet_progression.value != options.wallet_progression.option_off:
+        for location in orb_hut_locations:
+            add_rule(world.get_location(location, player),
+                     lambda state, loc=location: has_enough_money_for_shop_item(loc, options, state, player))
 
     # Grand Canal
     add_rule(world.get_location("Grand Canal Orb Hut 1 Left Item", player),

@@ -72,17 +72,6 @@ def create_items(world: MultiWorld, options: MarioParty7Options, player: int) ->
     for _ in range(filler_count):
         world.itempool.append(create_item(random.choice(filler_items), player))
 
-    # give some hints to the generator to avoid fill errors
-    # if options.dice_block_progression.value:
-    #     world.local_early_items[player]["Progressive Dice Block"] = 2
-    #
-    # if options.wallet_progression.value == options.wallet_progression.option_easy:
-    #     world.local_early_items[player]["Progressive Wallet"] = 1
-    # elif options.wallet_progression.value == options.wallet_progression.option_medium:
-    #     world.local_early_items[player]["Progressive Wallet"] = 2
-    # elif options.wallet_progression.value == options.wallet_progression.option_hard:
-    #     world.local_early_items[player]["Progressive Wallet"] = 3
-
 
 progression_items = [
     "Progressive Dice Block",
