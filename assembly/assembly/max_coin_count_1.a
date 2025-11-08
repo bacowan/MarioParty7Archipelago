@@ -1,4 +1,4 @@
-# r20 will hold the max coin count (2 bytes)
+# r20 will hold the max coin count (2 bytes). It's stored in memory at 0x81720001 - 0x81720002
 lis     r20, 0x8172
 ori     r20, r20, 0x0000
 lhz     r20, 1(r20)

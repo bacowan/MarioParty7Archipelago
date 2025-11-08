@@ -9,3 +9,5 @@ unlock_boards,349BD26C,804ed7a0
 unlock_boards,349BD95C,804ed7a0
 bowsers_inferno_lock_override,349BD300,804ed834
 bowsers_inferno_lock_override,349BD9F0,804ed834
+fix_minigame_selection_hook,23D6B8,80220618
+fix_minigame_selection,22030,80004D30
