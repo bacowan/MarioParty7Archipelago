@@ -2,6 +2,10 @@
 # r16: number of 0s (uncompleted minigames) in the flags
 # r26: output
 
+# r23 will store the kind of minigame this is. If it is a 1v1 minigame r23 will be 6
+cmpwi   r23, 6
+bne     default
+
 # r19 will hold what minigames have been completed. It's stored in memory at 0x81720003 and 0x81720004.
 # They are bitflags where 1 is completed and 0 is not. Left aligned.
 lis     r19, 0x8172
