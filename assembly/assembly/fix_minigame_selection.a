@@ -16,7 +16,7 @@ beq     default
 
 # count the 0s, then select a random one
 li      r16, 0              # r16 holds the count of 0s
-li      r29, 12             # we will check the leftmost 12 bits
+li      r20, 12             # we will check the leftmost 12 bits
 mr      r15, r19            # copy the flags temporarily
 
 loop_start:
@@ -27,34 +27,35 @@ addi    r16, r16, 1
 
 loop_end:
 slwi    r15, r15, 1         # shift the bits to check the next one
-addi    r29, r29, -1
-bne     loop_start          # loop until r29 == 0
+addic.  r20, r20, -1
+bne     loop_start          # loop until r20 == 0
 
 # get a "random" value by checking the time
-mftb    r29
+mftb    r20
 
 # take the modulus of that random number with the number of 0s we found. We will select that as the minigame
-divwu   r15, r29, r16       # r15 = r29 / r16
+divwu   r15, r20, r16       # r15 = r20 / r16
 mullw   r15, r15, r16       # r15 = r15 * r16
-subf    r15, r15, r29       # r15 = r29 - r15
+subf    r15, r15, r20       # r15 = r20 - r15
 
 # select the nth 0 minigame
-li      r29, 0              # r29 stores the index of the flags as we loop through, which will correspond to the selected game index
+addi    r15, r15, 1
+li      r20, 0              # r20 stores the index of the flags as we loop through, which will correspond to the selected game index
 
 next_loop_start:
 andi.   r14, r19, 0x8000    # check the most significant bit
 
 bne     next_loop_end       # if 1, don't count
-addi    r16, r16, -1
+addi    r15, r15, -1
 
 next_loop_end:
 slwi    r19, r19, 1         # bit shift left to check the next bit
-addi    r29, r29, 1         # increment the minigame index
+addi    r20, r20, 1         # increment the minigame index
 
-cmpwi   r16, 0              # Once r16 hits 0 then we're done
+cmpwi   r15, 0              # Once r16 hits 0 then we're done
 bne     next_loop_start
 
-addi    r26, r29, 50        # the first multiplayer game is game 50
+addi    r26, r20, 49        # the first multiplayer game is game 50 (r20 will be a min of 1 though)
 b       end
 
 default:
