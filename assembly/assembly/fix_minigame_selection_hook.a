@@ -1,9 +1,2 @@
-# set trampoline address
-#lis r17, 0x8000
-#ori r17, r17, 0x4D30
-
-# put the address in the ctr and jump there
-#mtctr r17
-#bctr
-
+# this will lead to 0x80004D34
 b -0x21B8E4

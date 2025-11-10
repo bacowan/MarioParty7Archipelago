@@ -1,0 +1,48 @@
+# Find out who won
+lis     r19, 0x802b         # 0x802b7F3A is the location of the winning player index
+lbz     r18, 0x7F3A (r19)
+
+# the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
+# r19 will now store the full offset.
+mulli r18, r18, 0x110
+
+# load the cpu difficulty/is-player value into memory
+lis     r19, 0x8029         # 0x80290C98 is where the first difficulty/is-player value is stored
+add     r19, r19, r18       # add the offset to the base memory value
+lbz     r19, 0x0C98(r19)
+
+# if it is a computer player, then skip to the end
+andi. r19, r19, 0x20        # this bit will be set for CPUs but not human players
+bne end
+
+# get the minigame id
+lis     r19, 0x8029         # 0x80291559 is the location of the winning player index
+lbz     r18, 0x1559 (r19)
+
+# 0 index the minigames. 1v1 minigames start at id 50.
+addi    r18, r18, -50
+
+# The completed minigames are stored at 0x81720003 and 0x81720004
+lis     r16, 0x8172
+lhz     r19, 3(r16)
+
+# make a bitmask for the current minigame
+lis     r17, 0x8000
+srw     r17, r17, r18
+
+# apply the bitmask
+or      r19, r19, r17
+
+# save it back
+sth     r19, 3(r16)
+
+end:
+
+# Overwritten code
+mr  r3, 28
+
+# go back to the callsite
+lis r19, 0x8000
+ori r19, r19, 0x5420
+mtctr r19
+bctr

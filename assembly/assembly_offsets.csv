@@ -11,3 +11,5 @@ bowsers_inferno_lock_override,349BD300,804ed834
 bowsers_inferno_lock_override,349BD9F0,804ed834
 fix_minigame_selection_hook,23D6B8,80220618
 fix_minigame_selection,22034,80004D34
+write_beaten_minigames_hook,59768,8003c6c8
+write_beaten_minigames,22720,80005420
