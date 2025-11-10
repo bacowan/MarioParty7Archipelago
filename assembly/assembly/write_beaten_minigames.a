@@ -1,5 +1,5 @@
 # Find out who won
-lis     r19, 0x802b         # 0x802b7F3A is the location of the winning player index
+lis     r19, 0x802B         # 0x802b7F3A is the location of the winning player index
 lbz     r18, 0x7F3A (r19)
 
 # the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
@@ -12,8 +12,8 @@ add     r19, r19, r18       # add the offset to the base memory value
 lbz     r19, 0x0C98(r19)
 
 # if it is a computer player, then skip to the end
-andi. r19, r19, 0x20        # this bit will be set for CPUs but not human players
-bne end
+andi.   r19, r19, 0x20        # this bit will be set for CPUs but not human players
+bne     end
 
 # get the minigame id
 lis     r19, 0x8029         # 0x80291559 is the location of the winning player index
@@ -33,6 +33,9 @@ srw     r17, r17, r18
 # apply the bitmask
 or      r19, r19, r17
 
+# shift the upper bits to the lower bits so that sth can save them
+srwi    r19, r19, 16
+
 # save it back
 sth     r19, 3(r16)
 
@@ -42,7 +45,7 @@ end:
 mr  r3, 28
 
 # go back to the callsite
-lis r19, 0x8000
-ori r19, r19, 0x5420
+lis r19, 0x8003
+ori r19, r19, 0xC6CC
 mtctr r19
 bctr
