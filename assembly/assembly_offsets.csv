@@ -13,3 +13,5 @@ fix_minigame_selection_hook,23D6B8,80220618
 fix_minigame_selection,22034,80004D34
 write_beaten_minigames_hook,59768,8003c6c8
 write_beaten_minigames,22720,80005420
+max_capsule_hook,184658,801675B8
+max_capsule,221C0,80004EC0
