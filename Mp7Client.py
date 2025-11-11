@@ -76,7 +76,7 @@ class MarioParty7Context(CommonContext):
     async def update_game_state(self) -> None:
         # Go through each new item and handle it
         for item in self.items_received[self.item_received_count:]:
-            await handle_item(item, self.slot_info)
+            handle_item(item, self.stored_data)
 
         # Update the number of items received in the save file
         if self.item_received_count < len(self.items_received):
