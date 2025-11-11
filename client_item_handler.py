@@ -5,7 +5,7 @@ import dolphin_memory_engine
 from NetUtils import NetworkItem
 from worlds.mp7 import item_name_to_id
 from worlds.mp7.items import wallet_sizes, dice_sizes
-from worlds.mp7.options import WalletProgression, CapsuleCapacityProgression
+from worlds.mp7.options import WalletProgression
 import bisect
 
 RAM_LOCATION_MAX_DICE_BLOCK = 0x81720000
