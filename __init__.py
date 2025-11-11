@@ -1,3 +1,5 @@
+from typing import Any
+
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import Component, components, launch_subprocess
@@ -39,6 +41,9 @@ class MarioParty7World(World):
 
     def set_rules(self) -> None:
         set_rules(self.multiworld, self.options, self.player)
+
+    def fill_slot_data(self) -> dict[str, Any]:
+        return self.options.as_dict("wallet_progression")
 
 def launch_client():
     from .Mp7Client import main

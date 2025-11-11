@@ -1,16 +1,9 @@
 from BaseClasses import MultiWorld, CollectionState
 from worlds.mp7 import MarioParty7Options
 from worlds.generic.Rules import set_rule, add_rule
+from worlds.mp7.items import wallet_sizes, dice_sizes
 from worlds.mp7.locations import coin_count_locations, coin_count_location_name_to_value, space_locations, \
     space_count_location_name_to_value, orb_hut_locations, board_locations
-
-wallet_sizes = {
-    "easy": [30, 50, 100, 999],
-    "medium": [0, 20, 50, 100, 999],
-    "hard": [0, 5, 10, 20, 50, 100, 999]
-}
-
-dice_sizes = [1, 2, 5, 10]
 
 def set_rules(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
     set_board_rules(world, options, player)
@@ -120,8 +113,8 @@ def set_minigame_rules(world: MultiWorld, options: MarioParty7Options, player: i
              lambda state: state.has("Minigame Run", player) and state.has("Minigame Jump", player))
     add_rule(world.get_location("Weight For It Beaten", player),
              lambda state: state.has("Minigame Run", player))
-    add_rule(world.get_location("Gimme a Sign Beaten", player),
-             lambda state: state.has("Minigame Run", player))
+    # add_rule(world.get_location("Gimme a Sign Beaten", player),
+    #          lambda state: state.has("Minigame Run", player))
     add_rule(world.get_location("Bridge Work Beaten", player),
              lambda state: state.has("Minigame Run", player))
     add_rule(world.get_location("Spin Doctor Beaten", player),

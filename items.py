@@ -112,3 +112,11 @@ item_name_to_id = {name: address for address, name in enumerate(item_classificat
 item_name_groups = {
     "Boards": { "Grand Canal", "Pyramid Park", "Neon Heights", "Windmillville", "Bower's Enchanted Inferno" }
 }
+
+dice_sizes = [1, 2, 5, 10]
+
+wallet_sizes = {
+    "easy": [30, 50, 100, 999],
+    "medium": [0, 20, 50, 100, 999],
+    "hard": [0, 5, 10, 20, 50, 100, 999]
+}
