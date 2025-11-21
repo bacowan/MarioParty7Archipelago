@@ -15,3 +15,5 @@ write_beaten_minigames_hook,59768,8003c6c8
 write_beaten_minigames,22720,80005420
 max_capsule_hook,184658,801675B8
 max_capsule,221C0,80004EC0
+set_max_speed_hook,9D728,80080688
+set_max_speed,22520,80005220

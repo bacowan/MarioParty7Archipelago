@@ -1,0 +1,33 @@
+# r31 seems to have a pointer to some player data. The offset depends on which player
+# load the expected value into r15 and compare with that
+lis     r15, 0x80b4         # Load upper 16 bits
+ori     r15, r15, 0x6be0    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# default logic
+lfs     f1, 0x4(r29)
+b       end
+
+# speed is stored here, and the max speed is added to the minimum speed, so that a value of 0 is the minimum speed
+fix_speed:
+lis     r16, 0x8172
+ori     r16, r16, 0x0008
+lfs     f1, 0x0(r16)        # get the base value
+
+
+addi    r1, r1, -8          # allocate 8 bytes on the stack
+lis     r16, 0x3f00         # this (float 0.5) is the base value
+stw     r16, 0(r1)          # store the value on the stack
+lfs     f21, 0(r1)          # load the value in the stack
+fadd    f1, f1, f21         # add it to f1. To go full speed this should be 0x3f00 0000 (float 0.5)
+addi    r1, r1, 8           # restore the stack
+
+
+
+end:
+# go back to the callsite
+lis r16, 0x8008
+ori r16, r16, 0x068C
+mtctr r16
+bctr
