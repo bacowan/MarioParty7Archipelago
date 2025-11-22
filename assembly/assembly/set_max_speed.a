@@ -1,7 +1,39 @@
 # r31 seems to have a pointer to some player data. The offset depends on which player
 # load the expected value into r15 and compare with that
+
+# p1 for gimme a sign. p2 is 80b46de0
 lis     r15, 0x80b4         # Load upper 16 bits
 ori     r15, r15, 0x6be0    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# p1 for gimme a sign. p2 is 809cdf60
+lis     r15, 0x809c         # Load upper 16 bits
+ori     r15, r15, 0xdd60    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# p1 for bridge work. p2 is 80b25620
+lis     r15, 0x80b2         # Load upper 16 bits
+ori     r15, r15, 0x5420    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# p1 for apes of wrath. p2 is 808b1140
+lis     r15, 0x808b         # Load upper 16 bits
+ori     r15, r15, 0x0f40    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# p1 for spin doctor. p2 is 80924dc0
+lis     r15, 0x8092         # Load upper 16 bits
+ori     r15, r15, 0x4bc0    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# p1 for royal rumpus. p2 is 808cbac0
+lis     r15, 0x808c         # Load upper 16 bits
+ori     r15, r15, 0xb8c0    # OR in lower 16 bits
 cmpw    r31, r15            # Compare r3 with r0
 beq     fix_speed
 

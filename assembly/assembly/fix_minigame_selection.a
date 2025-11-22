@@ -59,12 +59,30 @@ addi    r20, r20, 1         # increment the minigame index
 cmpwi   r15, 0              # Once r16 hits 0 then we're done
 bne     next_loop_start
 
-addi    r26, r20, 49        # the first multiplayer game is game 50 (r20 will be a min of 1 though)
+# since the loop starts by incrementing r20, it will always be 1 too large
+addi    r20, r20, -1
+
+# The duel minigames aren't side by side in index. They are located at 45-46, 50-54, 57-61.
+li      r15, 2
+cmplw   r20, r15
+blt     first_set           # select 45 or 46
+li      r15, 6
+cmplw   r20, r15
+blt     second_set          # select 50-54
+
+addi    r26, r20, 51        # r20 will be at least 6, so this will result in 57+
+b       end
+
+first_set:
+addi    r26, r20, 45        # first minigame starts at 45
+b       end
+
+second_set:
+addi    r26, r20, 48        # r20 will be between 2 and 5, so this will result in 50-54
 b       end
 
 default:
 addi    r26, r26, 1
-
 
 # go back to the callsite
 end:
