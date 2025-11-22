@@ -37,6 +37,18 @@ ori     r15, r15, 0xb8c0    # OR in lower 16 bits
 cmpw    r31, r15            # Compare r3 with r0
 beq     fix_speed
 
+# p1 for weight for it. p2 is 8091e980
+lis     r15, 0x8091         # Load upper 16 bits
+ori     r15, r15, 0xe780    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
+# p1 for warp pipe dreams. p2 is 809b84e0
+lis     r15, 0x809b         # Load upper 16 bits
+ori     r15, r15, 0x82e0    # OR in lower 16 bits
+cmpw    r31, r15            # Compare r3 with r0
+beq     fix_speed
+
 # default logic
 lfs     f1, 0x4(r29)
 b       end
