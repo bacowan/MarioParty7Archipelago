@@ -19,8 +19,26 @@ bne     end
 lis     r19, 0x8029         # 0x80291559 is the location of the winning player index
 lbz     r18, 0x1559 (r19)
 
-# 0 index the minigames. 1v1 minigames start at id 50.
+# 0 index the minigames.
+# The minigame ids are 45-46, 50-54, 57-61, so we need to exclude the gaps
+li      r19, 47
+cmplw   r18, r15
+blt     first_set          # 45-46
+li      r19, 55
+cmplw   r18, r15
+blt     second_set         # 50-54
+
 addi    r18, r18, -50
+b       set_end
+
+first_set:
+addi    r18, r18, -45
+b       set_end
+
+second_set:
+addi    r18, r18, -48
+
+set_end:
 
 # The completed minigames are stored at 0x81720003 and 0x81720004
 lis     r16, 0x8172
