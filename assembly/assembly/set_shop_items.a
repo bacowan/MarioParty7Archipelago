@@ -1,0 +1,137 @@
+# save registers
+stwu    r1, -32(r1)
+
+stw     r17,  8(r1)
+stw     r18, 12(r1)
+stw     r19, 16(r1)
+stw     r20, 20(r1)
+stw     r21, 24(r1)
+stw     r22, 28(r1)
+
+
+# Check who's turn it is. r4 points to the current player structure, so we can use that.
+# Use r18 as a throwaway value
+lbz     r18, 0(r4)
+andi.   r18, r18, 0x20          # this bit will be set for CPUs but not human players
+bne     end
+
+# Check what the current shop is. The current space is stored in the player structure + 0x15
+lbz     r18, 0x15(r4)
+
+# load the appropriate items into the shop. Leave vanilla items alone (represented by 0), and update
+# archipelago items. This is a bit mask of 4 bytes (30 bits; the most significant 2 are ignored).
+# 0 means that the item should be left alone.
+
+# r19: mask of 1 bit that will correspond to the rightmost item of any given shop.
+#   It will be shifted twice to the right to check the left and middle items.
+
+li      r19, 0x1            # This is a mask that will check which shop items are available
+
+cmpwi   r18, 0x64           # grand canal
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# ... others
+
+# which shop items have been checked are stored at 0x81720009 - 0x8172000C
+shop_selection_end:
+
+# r18: bit flags for each collected shop item from all shops
+lis     r18, 0x8172
+lwz     r18, 0x9(r18)
+
+# r17: location of the shop item structure in memory. This structure is 0x1C large and the first byte is the item id.
+# r20: temp register for values to save.
+# r21: offset for the capsule info array for item 1A. We will use the unused item ids of 1A, 1B, and 1C
+# r22: index of current orb relative to all archapelago orbs
+lis     r21, 0x8027
+ori     r21, r21, 0x4898
+lis     r17, 0x805E
+ori     r17, r17, 0xC62B
+cntlzw  r22, r19                    # count leading zeros in r19
+li      r20, 31
+subf    r22, r22, r20               # convert to trailing zeros
+
+
+# rightmost shop item
+and.    r20, r19, r18
+beq     middle_shop_item
+
+# store the new item id
+li      r20, 0x1A
+stb     r20, 0(r17)
+
+# set the model for an empty orb
+lis     r20, 0x000F
+ori     r20, r20, 0x001D
+stw     r20, 0(r21)
+
+# set the text for the orb
+lis     r20, 0x0025
+or      r20, r20, r22               # r22 has the index of the current orb as an archipelago item
+stw     r20, 8(r21)                 # the text of the item is at an offset of 8 bytes from the start
+
+# todo: update the orb data too
+
+middle_shop_item:
+slwi    r19, r19, 1         # increment the shop item ordinal
+addi    r22, r22, 1         # as well as the index
+and.    r20, r19, r18
+beq     left_shop_item
+
+# store the new item id
+li      r20, 0x1B
+stb     r20, 0x1C(r17)
+
+# set the model for an empty orb
+lis     r20, 0x000F
+ori     r20, r20, 0x001D
+stw     r20, 0x28(r21)
+
+# set the text for the orb
+lis     r20, 0x0025
+or      r20, r20, r22               # r22 has the index of the current orb as an archipelago item
+stw     r20, 0x30(r21)              # the text of the item is at an offset of 8 bytes from the start
+
+
+left_shop_item:
+slwi    r19, r19, 1         # increment the shop item ordinal
+addi    r22, r22, 1         # as well as the index
+and.    r20, r19, r18
+beq     shop_item_end
+
+# store the new item id
+li      r20, 0x1C
+stb     r20, 0x38(r17)
+
+# set the mmodel for an empty orb
+lis     r20, 0x000F
+ori     r20, r20, 0x001D
+stw     r20, 0x50(r21)
+
+# set the text for the orb
+lis     r20, 0x0025
+or      r20, r20, r22               # r22 has the index of the current orb as an archipelago item
+stw     r20, 0x58(r21)              # the text of the item is at an offset of 8 bytes from the start
+
+shop_item_end:
+end:
+
+# restore registers
+lwz     r17,  8(r1)
+lwz     r18, 12(r1)
+lwz     r19, 16(r1)
+lwz     r20, 20(r1)
+lwz     r21, 24(r1)
+lwz     r22, 28(r1)
+
+addi    r1, r1, 32
+
+# restore previous code
+sth     r6, 0x0014 (r4)
+
+# jump back
+lis r19, 0x8016
+ori r19, r19, 0x0450
+mtctr r19
+bctr

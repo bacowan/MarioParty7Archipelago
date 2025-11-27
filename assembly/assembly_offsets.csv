@@ -17,3 +17,5 @@ max_capsule_hook,184658,801675B8
 max_capsule,221C0,80004EC0
 set_max_speed_hook,9D728,80080688
 set_max_speed,22520,80005220
+set_shop_items_hook,17D4EC,8016044c
+set_shop_items,22204,80004f04
