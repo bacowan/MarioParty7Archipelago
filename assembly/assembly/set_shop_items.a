@@ -8,15 +8,27 @@ stw     r20, 20(r1)
 stw     r21, 24(r1)
 stw     r22, 28(r1)
 
+# Note that we don't bother checking whose turn it is, since CPUs don't actually view this.
+# However, we do have to figure out which player the human is. r18 will temporarily represent
+# the location of the player structure in memory.
+lis     r18, 0x8029
+ori     r18, r18, 0x0B88        # player structure is at 0x80291522; we add 0x110 at the start of every loop, so start at that value - 0x110
+li      r17, 0                  # count how many players we have counted
 
-# Check who's turn it is. r4 points to the current player structure, so we can use that.
-# Use r18 as a throwaway value
-lbz     r18, 0(r4)
-andi.   r18, r18, 0x20          # this bit will be set for CPUs but not human players
-bne     end
+player_check:
+cmpwi   r17, 4                  # break out if we've checked all players
+beq     end
+
+addi    r18, r18, 0x110         # prepare to check the next structure
+addi    r17, r17, 1
+
+lbz     r19, 0(r18)             # load the value from memory
+
+andi.   r19, r19, 0x20          # this bit will be set for CPUs but not human players
+bne     player_check
 
 # Check what the current shop is. The current space is stored in the player structure + 0x15
-lbz     r18, 0x15(r4)
+lbz     r18, 0x15(r18)
 
 # load the appropriate items into the shop. Leave vanilla items alone (represented by 0), and update
 # archipelago items. This is a bit mask of 4 bytes (30 bits; the most significant 2 are ignored).
@@ -27,7 +39,7 @@ lbz     r18, 0x15(r4)
 
 li      r19, 0x1            # This is a mask that will check which shop items are available
 
-cmpwi   r18, 0x64           # grand canal
+cmpwi   r18, 0x65           # grand canal
 beq     shop_selection_end
 slwi    r19, r19, 3          # move the 3 bits to the next shop
 
@@ -128,10 +140,10 @@ lwz     r22, 28(r1)
 addi    r1, r1, 32
 
 # restore previous code
-sth     r6, 0x0014 (r4)
+lwzx    r3, r26, r0
 
 # jump back
-lis r19, 0x8016
-ori r19, r19, 0x0450
+lis r19, 0x8021
+ori r19, r19, 0x7198
 mtctr r19
 bctr
