@@ -41,11 +41,55 @@ lbz     r18, 0x15(r18)
 
 li      r19, 0x1            # This is a mask that will check which shop items are available
 
-cmpwi   r18, 0x65           # grand canal
+# grand canal left
+cmpwi   r18, 0x65
 beq     shop_selection_end
 slwi    r19, r19, 3          # move the 3 bits to the next shop
 
-# ... others
+# grand canal right
+cmpwi   r18, 0x67
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# pagoda peak bottom
+cmpwi   r18, 0x10
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# pagoda peak top
+cmpwi   r18, 0x46
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# neon heights left
+cmpwi   r18, 0x0F
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# neon heights right
+cmpwi   r18, 0x77
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# windmilleville left
+cmpwi   r18, 0x5C
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# windmilleville right
+cmpwi   r18, 0x18
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# bowser bottom
+cmpwi   r18, 0x3B
+beq     shop_selection_end
+slwi    r19, r19, 3          # move the 3 bits to the next shop
+
+# bowser top
+cmpwi   r18, 0x85
+beq     shop_selection_end
+b       end
 
 # which shop items have been checked are stored at 0x81720009 - 0x8172000C
 shop_selection_end:
