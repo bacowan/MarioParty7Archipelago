@@ -40,11 +40,6 @@ class CapsuleCapacityProgression(Toggle):
     display_name = "Capsule Capacity Progression"
     default = False
 
-class LockedMenuNavigation(Toggle):
-    """The ability to navigate menus in: shops, star purchases, and board events are each locked behind checks"""
-    display_name = "Locked Menu Navigation"
-    default = False
-
 class LockedMinigameActions(Toggle):
     """Certain abilities in minigames will not work unless they are unlocked"""
     display_name = "Locked Minigame Actions"
@@ -94,4 +89,3 @@ class MarioParty7Options(PerGameCommonOptions):
     randomize_board_order: RandomizeBoardOrder
     randomize_board_spaces: RandomizeBoardSpaces
     locked_minigame_actions: LockedMinigameActions
-    locked_menu_navigation: LockedMenuNavigation

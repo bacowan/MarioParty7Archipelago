@@ -27,11 +27,6 @@ def has_enough_money_for_shop_item(location_name: str, options: MarioParty7Optio
 
 def set_shop_sanity_rules(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
 
-    # Need to be able to navigate the shops in order to buy anything from them
-    if options.locked_menu_navigation.value:
-        for location in orb_hut_locations:
-            add_rule(world.get_location(location, player), lambda state: state.has("Shop Menu Navigation", player))
-
     # Make sure the player can afford the item
     if options.wallet_progression.value != options.wallet_progression.option_off:
         for location in orb_hut_locations:
@@ -113,8 +108,8 @@ def set_minigame_rules(world: MultiWorld, options: MarioParty7Options, player: i
              lambda state: state.has("Minigame Run", player) and state.has("Minigame Jump", player))
     add_rule(world.get_location("Weight For It Beaten", player),
              lambda state: state.has("Minigame Run", player))
-    # add_rule(world.get_location("Gimme a Sign Beaten", player),
-    #          lambda state: state.has("Minigame Run", player))
+    add_rule(world.get_location("Gimme a Sign Beaten", player),
+             lambda state: state.has("Minigame Run", player) or state.has("Minigame Jump", player))
     add_rule(world.get_location("Bridge Work Beaten", player),
              lambda state: state.has("Minigame Run", player))
     add_rule(world.get_location("Spin Doctor Beaten", player),
