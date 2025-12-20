@@ -20,4 +20,6 @@ set_max_speed,22520,80005220
 set_shop_items_hook,234234,80217194
 set_shop_items,22204,80004f04
 lock_jump_hook,E4ECC,800C7E2C
-lock_jump,223B8,800050b8
+lock_jump,223B8,800050B8
+lock_jump_hook_2,BF7D0,800a2730
+lock_jump_2,2242C,8000512C

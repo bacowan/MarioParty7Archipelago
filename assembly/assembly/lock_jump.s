@@ -9,9 +9,9 @@ andi.   r19, r19, 1
 bne+    end
 
 # check the current minigame to see if we need to disable the A button
-# current minigame is stored at 0x804ee8d1 (I think). It's set to 0x18 if there's no current minigame (I think)
-lis     r19, 0x804E
-ori     r19, r19, 0xE8D1
+# current minigame is stored at 0x80291559 (I think). It's set to 0x18 if there's no current minigame (I think)
+lis     r19, 0x8029
+ori     r19, r19, 0x1559
 lbz     r19, 0(r19)
 
 # Warp Pipe Dreams
