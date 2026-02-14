@@ -71,7 +71,7 @@ class SpaceSanity(Toggle):
     display_name = "Space Sanity"
     default = False
 
-class RandomizeBoardSpaces(Toggle):
+class RandomizeBoardSpaces(Choice):
     """Randomize the types of board spaces
     Off will use the original spaces
     Balanced will keep the same ratio of space types as the original boards

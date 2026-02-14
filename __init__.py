@@ -8,7 +8,7 @@ from .items import item_classifications, MarioParty7Item, item_name_to_id, creat
 from .locations import all_locations, location_name_to_id
 from .options import MarioParty7Options
 from .regions import create_regions
-from .rom import MarioParty7ProcedurePatch, write_tokens
+from .rom import MarioParty7ProcedurePatch, write_json
 from .rules import set_rules
 from .settings import MarioParty7Settings
 
@@ -53,7 +53,7 @@ class MarioParty7World(World):
 
     def generate_output(self, output_directory: str):
         patch = MarioParty7ProcedurePatch(player=self.player, player_name=self.player_name)
-        write_tokens(self, patch)
+        write_json(self, patch)
         out_file_name = self.multiworld.get_out_file_name_base(self.player)
         patch.write(os.path.join(output_directory, f"{out_file_name}{patch.patch_file_ending}"))
 

@@ -8,7 +8,7 @@ from typing import Optional
 
 from NetUtils import NetworkItem
 from worlds.mp7.client_item_handler import handle_item
-from worlds.mp7.patch import apply_patches
+from worlds.mp7.patch_rom import apply_patches
 
 ITEM_COUNT_SAVE_LOCATION = 0x8029D70A # This is in the save file right after the date. I don't _think_ it's being used.
 
