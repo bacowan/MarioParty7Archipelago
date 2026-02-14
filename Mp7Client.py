@@ -50,6 +50,7 @@ class MarioParty7Context(CommonContext):
     command_processor = MarioParty7CommandProcessor
     game = "Mario Party 7"
     items_handling: int = 0b111
+    patch_suffix = ".apmp7"
 
     def __init__(self, server_address: Optional[str], password: Optional[str]) -> None:
         super().__init__(server_address, password)

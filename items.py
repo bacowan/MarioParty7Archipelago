@@ -53,11 +53,6 @@ def create_items(world: MultiWorld, options: MarioParty7Options, player: int) ->
         for _ in range(7):
             world.itempool.append(create_item("Progressive Wallet", player))
 
-    if options.locked_menu_navigation.value:
-        world.itempool.append(create_item("Shop Menu Navigation", player))
-        world.itempool.append(create_item("Star Purchase Menu Navigation", player))
-        world.itempool.append(create_item("Board Event Menu Navigation", player))
-
     if options.locked_minigame_actions.value:
         world.itempool.append(create_item("Minigame Jump", player))
         world.itempool.append(create_item("Minigame Run", player))

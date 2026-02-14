@@ -72,9 +72,15 @@ class SpaceSanity(Toggle):
     default = False
 
 class RandomizeBoardSpaces(Toggle):
-    """Board spaces are randomized"""
+    """Randomize the types of board spaces
+    Off will use the original spaces
+    Balanced will keep the same ratio of space types as the original boards
+    Completely Random will set space types with no bias"""
     display_name = "Randomize Board Spaces"
-    default = False
+    default = 0
+    option_off = 0
+    option_balanced = 1
+    option_completely_random = 2
 
 @dataclass
 class MarioParty7Options(PerGameCommonOptions):
