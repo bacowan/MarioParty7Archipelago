@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, ClassVar
 
 from Options import OptionError
 from worlds.AutoWorld import World, WebWorld
@@ -8,6 +8,7 @@ from .locations import all_locations, location_name_to_id
 from .options import MarioParty7Options
 from .regions import create_regions
 from .rules import set_rules
+from .settings import MarioParty7Settings
 
 
 class MarioParty7WebWorld(WebWorld):
@@ -23,6 +24,9 @@ class MarioParty7World(World):
     options_dataclass = MarioParty7Options
     options: MarioParty7Options
     item_name_groups = item_name_groups
+
+    settings_key = "pokemon_emerald_settings"
+    settings: ClassVar[MarioParty7Settings]
 
     def generate_early(self):
         if self.options.wallet_progression and not self.options.minigame_sanity:
@@ -44,6 +48,9 @@ class MarioParty7World(World):
 
     def fill_slot_data(self) -> dict[str, Any]:
         return self.options.as_dict("wallet_progression")
+
+    def generate_output(self, output_directory: str):
+        pass
 
 def launch_client():
     from .Mp7Client import main
