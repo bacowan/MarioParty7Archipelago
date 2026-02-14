@@ -3,8 +3,6 @@ import os
 import random
 from typing import TYPE_CHECKING, Optional, List, Dict
 
-import numpy as np
-
 from worlds.Files import APProcedurePatch, APTokenTypes
 from settings import get_settings
 from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS
@@ -29,6 +27,26 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
 
         return base_rom_bytes
 
+    def patch(self, target: str):
+        vanilla_rom = self.get_source_data()
+        with open(target, 'wb') as f:
+            f.write(vanilla_rom)
+
+        patch_data = json.loads(self.get_file("data.json"))
+
+        with open(target, 'r+b') as iso:
+
+            if patch_data["progressive_dice_blocks"]:
+                self.set_progressive_dice_blocks(iso)
+
+    def set_progressive_dice_blocks(self, iso):
+        iso.seek(ASSEMBLY_OFFSETS["fix_die_max_hook"])
+        iso.write(load_assembly("fix_die_max_hook"))
+
+        iso.seek(ASSEMBLY_OFFSETS["fix_die_max"])
+        iso.write(load_assembly("fix_die_max"))
+
+
 def load_assembly(bin_name: str) -> bytes:
     with open(os.path.join(os.path.dirname(__file__), "assembly", "bin", bin_name), "rb") as binary_file:
         return binary_file.read()
@@ -40,10 +58,7 @@ def randomize_board(board_name: str, is_balanced: bool) -> List[int]:
         new_board_data["duel"] -= 1 # one duel space will be manually inserted
     else:
         total_spaces = sum(board_data.values())
-        new_space_counts = list(
-            np.random.multinomial(
-                total_spaces - 1,  # one duel space will be manually inserted
-                [1/6.]*6))
+        new_space_counts = [int(random.random() * 6) + 1 for _ in range(total_spaces)]
         new_board_data = {
             "blue": new_space_counts[0],
             "red": new_space_counts[1],
