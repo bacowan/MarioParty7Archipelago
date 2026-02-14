@@ -17,6 +17,11 @@ def move_file(iso_file, file_offset, file_size):
     new_file_offset = iso_file.tell()
     iso_file.write(data)
 
+    # make sure the file has a multiple of 16 bytes
+    iso_file.seek(0, 2)
+    new_file_size = iso_file.tell()
+    iso_file.write(b'\x00' * (16 - (new_file_size % 16)))
+
     # Overwrite original section with zeros
     iso_file.seek(file_offset)
     iso_file.write(b'\x00' * file_size)
@@ -67,7 +72,7 @@ def main():
                 new_offset = move_file(iso_file, file_offset, file_size)
                 new_offset_bytes = new_offset.to_bytes(4, byteorder='big')
 
-                iso_file.seek(offset)
+                iso_file.seek(offset + FST_ENTRY_FILE_POINTER_OFFSET)
                 iso_file.write(new_offset_bytes)
 
                 break
