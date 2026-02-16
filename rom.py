@@ -7,7 +7,7 @@ from worlds.Files import APProcedurePatch
 from settings import get_settings
 from .compression import lzss_decompress, lzss_compress
 from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS, FILE_OFFSETS, FILE_SIZES, FST_OFFSETS, \
-    SPACE_DATA_INDEXES, HARDCODED_DUEL_SPACE_INDEXES
+    SPACE_DATA_INDEXES
 from .options import RandomizeBoardSpaces, DiceBlockProgression
 from .space_data import SpaceData
 
@@ -75,7 +75,7 @@ def set_board_spaces(iso: BinaryIO, board: str, space_data: List[int]):
     structured_space_data = SpaceData.from_binary(decompressed_data)
     space_index = 0
     for space in structured_space_data.spaces:
-        if space.get_color() in BOARD_SPACE_IDS.values():# and space_index < len(space_data):
+        if space.get_color() in BOARD_SPACE_IDS.values():
             space.set_color(space_data[space_index])
             space_index += 1
 
@@ -139,7 +139,6 @@ def randomize_board(board_name: str, is_balanced: bool) -> List[int]:
     board_data = BOARD_SPACE_DATA[board_name]
     if is_balanced:
         new_board_data = dict(board_data)
-        new_board_data["duel"] -= 1 # one duel space will be manually inserted
 
         res = []
         for key, value in new_board_data.items():
@@ -148,9 +147,12 @@ def randomize_board(board_name: str, is_balanced: bool) -> List[int]:
         return res
     else:
         total_spaces = sum(board_data.values())
-        new_space_values = [int(random.random() * 6) for _ in range(total_spaces - 1)]
+        new_space_values = [int(random.random() * 6) for _ in range(total_spaces)]
+        # make sure there's always at least one
+        if BOARD_SPACE_IDS["duel"] not in new_space_values:
+            new_space_values[random.randint(0, total_spaces - 1)] = BOARD_SPACE_IDS["duel"]
         res = [list(BOARD_SPACE_IDS.values())[x] for x in new_space_values]
-    res.insert(HARDCODED_DUEL_SPACE_INDEXES[board_name], BOARD_SPACE_IDS["duel"])
+
     return res
 
 

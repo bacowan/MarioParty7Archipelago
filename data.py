@@ -51,16 +51,6 @@ BOARD_SPACE_IDS: Dict[str, int] = {
     "bowser":   0x04
 }
 
-# each board has 1 duel space near the start to prevent softlocks
-HARDCODED_DUEL_SPACE_INDEXES: Dict[str, int] = {
-    "grand_canal":                  0,
-    "pagoda_peak":                  0,
-    "pyramid_park":                 0,
-    "windmillville":                0,
-    "neon_heights":                 0,
-    "bowsers_enchanted_inferno":    0,
-}
-
 BOARD_SPACE_DATA: Dict[str, Dict[str, int]] = {
     "grand_canal": {
         "blue": 36,
