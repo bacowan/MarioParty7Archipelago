@@ -11,8 +11,12 @@ SPACE_DATA_INDEXES: Dict[str, int] = {
 }
 
 ASSEMBLY_OFFSETS: Dict[str, int] = {
-    "fix_die_max_hook":     0x001A_9D24,
-    "fix_die_max":          0x0002_0924
+    "fix_die_max_hook":         0x001A_9D24,
+    "fix_die_max":              0x0002_0924,
+    "max_coin_count_1_hook":    0x0018_3D70,
+    "max_coin_count_1":         0x0002_09B8,
+    "max_coin_count_2_hook":    0x0005_BF34,
+    "max_coin_count_2":         0x0002_0A44,
 }
 
 FST_OFFSETS: Dict[str, int] = {

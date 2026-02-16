@@ -8,7 +8,7 @@ from settings import get_settings
 from .compression import lzss_decompress, lzss_compress
 from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS, FILE_OFFSETS, FILE_SIZES, FST_OFFSETS, \
     SPACE_DATA_INDEXES
-from .options import RandomizeBoardSpaces, DiceBlockProgression
+from .options import RandomizeBoardSpaces, DiceBlockProgression, WalletProgression
 from .space_data import SpaceData
 
 if TYPE_CHECKING:
@@ -41,17 +41,21 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
         with open(target, 'r+b') as iso:
             if patch_data["progressive_dice_blocks"]:
                 set_progressive_dice_blocks(iso)
+            if patch_data["progressive_wallet"]:
+                set_progressive_wallet(iso)
             if patch_data["board_data"] is not None:
                 for (board, space_data) in patch_data["board_data"].items():
                     set_board_spaces(iso, board, space_data)
 
+def set_progressive_wallet(iso:BinaryIO):
+    write_assembly("max_coin_count_1_hook", iso)
+    write_assembly("max_coin_count_1", iso)
+    write_assembly("max_coin_count_2_hook", iso)
+    write_assembly("max_coin_count_2", iso)
 
 def set_progressive_dice_blocks(iso: BinaryIO):
-    iso.seek(ASSEMBLY_OFFSETS["fix_die_max_hook"])
-    iso.write(load_assembly("fix_die_max_hook"))
-
-    iso.seek(ASSEMBLY_OFFSETS["fix_die_max"])
-    iso.write(load_assembly("fix_die_max"))
+    write_assembly("fix_die_max_hook", iso)
+    write_assembly("fix_die_max", iso)
 
 def set_board_spaces(iso: BinaryIO, board: str, space_data: List[int]):
     # load compressed data and decompress
@@ -135,6 +139,10 @@ def load_assembly(bin_name: str) -> bytes:
     with open(os.path.join(os.path.dirname(__file__), "assembly", "bin", bin_name), "rb") as binary_file:
         return binary_file.read()
 
+def write_assembly(bin_name: str, iso: BinaryIO):
+    iso.seek(ASSEMBLY_OFFSETS[bin_name])
+    iso.write(load_assembly(bin_name))
+
 def randomize_board(board_name: str, is_balanced: bool) -> List[int]:
     board_data = BOARD_SPACE_DATA[board_name]
     if is_balanced:
@@ -172,20 +180,8 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
 
     patch_data = {
         "progressive_dice_blocks": world.options.dice_block_progression == DiceBlockProgression.option_true,
+        "progressive_wallet": world.options.wallet_progression.value,
         "board_data": boards
     }
 
     patch.write_file("data.json", json.dumps(patch_data).encode())
-
-
-    # if world.options.dice_block_progression:
-    #     patch.write_token(
-    #         APTokenTypes.WRITE,
-    #         ASSEMBLY_OFFSETS["fix_die_max_hook"],
-    #         load_assembly("fix_die_max_hook")
-    #     )
-    #     patch.write_token(
-    #         APTokenTypes.WRITE,
-    #         ASSEMBLY_OFFSETS["fix_die_max"],
-    #         load_assembly("fix_die_max")
-    #     )
