@@ -1,16 +1,20 @@
 import json
 import os
 import random
-from typing import TYPE_CHECKING, Optional, List, Dict
+from typing import TYPE_CHECKING, Optional, List, Dict, BinaryIO
 
-from worlds.Files import APProcedurePatch, APTokenTypes
+from worlds.Files import APProcedurePatch
 from settings import get_settings
-from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS
+from .compression import lzss_decompress, lzss_compress
+from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS, FILE_OFFSETS, FILE_SIZES, FST_OFFSETS, \
+    SPACE_DATA_INDEXES, HARDCODED_DUEL_SPACE_INDEXES
 from .options import RandomizeBoardSpaces, DiceBlockProgression
-from .patch_data import PatchData, BoardData
+from .space_data import SpaceData
 
 if TYPE_CHECKING:
     from . import MarioParty7World
+
+
 
 class MarioParty7ProcedurePatch(APProcedurePatch):
     game = "Mario Party 7"
@@ -35,17 +39,97 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
         patch_data = json.loads(self.get_file("data.json"))
 
         with open(target, 'r+b') as iso:
-
             if patch_data["progressive_dice_blocks"]:
-                self.set_progressive_dice_blocks(iso)
+                set_progressive_dice_blocks(iso)
+            if patch_data["board_data"] is not None:
+                for (board, space_data) in patch_data["board_data"].items():
+                    set_board_spaces(iso, board, space_data)
 
-    def set_progressive_dice_blocks(self, iso):
-        iso.seek(ASSEMBLY_OFFSETS["fix_die_max_hook"])
-        iso.write(load_assembly("fix_die_max_hook"))
 
-        iso.seek(ASSEMBLY_OFFSETS["fix_die_max"])
-        iso.write(load_assembly("fix_die_max"))
+def set_progressive_dice_blocks(iso: BinaryIO):
+    iso.seek(ASSEMBLY_OFFSETS["fix_die_max_hook"])
+    iso.write(load_assembly("fix_die_max_hook"))
 
+    iso.seek(ASSEMBLY_OFFSETS["fix_die_max"])
+    iso.write(load_assembly("fix_die_max"))
+
+def set_board_spaces(iso: BinaryIO, board: str, space_data: List[int]):
+    # load compressed data and decompress
+    file_offset = FILE_OFFSETS[board]
+    file_size = FILE_SIZES[board]
+    iso.seek(file_offset)
+    section_count = int.from_bytes(iso.read(4), "big")
+    iso.seek(file_offset + SPACE_DATA_INDEXES[board] * 4 + 4)
+    space_section_offest = int.from_bytes(iso.read(4), "big")
+    if SPACE_DATA_INDEXES[board] == section_count - 1:
+        next_section_offset = file_size
+    else:
+        next_section_offset = int.from_bytes(iso.read(4), "big")
+    iso.seek(file_offset + space_section_offest)
+    decompressed_size = int.from_bytes(iso.read(4), "big")
+    iso.read(4) # this word is the compression type; for space data it should be lzss
+    compressed_space_data = iso.read(next_section_offset - space_section_offest - 8)
+    decompressed_data = lzss_decompress(compressed_space_data, decompressed_size)
+
+    # update space types
+    structured_space_data = SpaceData.from_binary(decompressed_data)
+    space_index = 0
+    for space in structured_space_data.spaces:
+        if space.get_color() in BOARD_SPACE_IDS.values():# and space_index < len(space_data):
+            space.set_color(space_data[space_index])
+            space_index += 1
+
+    # recompress
+    recompressed_space_data = lzss_compress(structured_space_data.to_binary())
+    size_diff = len(recompressed_space_data) - len(compressed_space_data)
+    # add a padding byte if the section size isn't a multiple of 2
+    size_diff += size_diff % 2
+
+    # if the size has increased, we need to move the file to the end of the iso
+    if size_diff > 0:
+        # move the file
+        iso.seek(file_offset)
+        file_data = iso.read(file_size)
+        iso.seek(0, 2)  # 2 = SEEK_END
+        new_file_offset = iso.tell()
+        iso.write(file_data)
+
+        # TODO: zero out old data? Is it necessary?
+
+        # update section offsets of everything after the changed section
+        iso.seek(new_file_offset)
+        section_count = int.from_bytes(iso.read(4), "big")
+        for i in range(SPACE_DATA_INDEXES[board] + 1, section_count):
+            iso.seek(new_file_offset + i * 4 + 4)
+            section_offset = int.from_bytes(iso.read(4), "big")
+            new_section_offset = section_offset + size_diff
+            iso.seek(new_file_offset + i * 4 + 4)
+            iso.write(new_section_offset.to_bytes(4, byteorder='big'))
+
+        # shift data
+        iso.seek(new_file_offset + next_section_offset)
+        remaining_data = iso.read() # just read everything until the end of the file
+        iso.seek(new_file_offset + next_section_offset + size_diff)
+        iso.write(remaining_data)
+        iso.flush()
+
+        # update the FST
+        iso.seek(FST_OFFSETS[board] + 4)
+        iso.write(new_file_offset.to_bytes(4, byteorder='big'))
+        iso.write((file_size + size_diff).to_bytes(4, byteorder='big'))
+
+        file_offset = new_file_offset
+
+    # write new data
+    iso.seek(file_offset + space_section_offest + 8)
+    iso.write(recompressed_space_data)
+    iso.flush()
+
+    # make sure the file has a multiple of 16 bytes
+    iso.seek(0, 2)
+    new_iso_size = iso.tell()
+    iso.write(b'\x00' * (16 - (new_iso_size % 16)))
+    iso.flush()
 
 def load_assembly(bin_name: str) -> bytes:
     with open(os.path.join(os.path.dirname(__file__), "assembly", "bin", bin_name), "rb") as binary_file:
@@ -56,23 +140,19 @@ def randomize_board(board_name: str, is_balanced: bool) -> List[int]:
     if is_balanced:
         new_board_data = dict(board_data)
         new_board_data["duel"] -= 1 # one duel space will be manually inserted
+
+        res = []
+        for key, value in new_board_data.items():
+            res.extend([BOARD_SPACE_IDS[key]] * value)
+        random.shuffle(res)
+        return res
     else:
         total_spaces = sum(board_data.values())
-        new_space_counts = [int(random.random() * 6) + 1 for _ in range(total_spaces)]
-        new_board_data = {
-            "blue": new_space_counts[0],
-            "red": new_space_counts[1],
-            "mic": new_space_counts[2],
-            "duel": new_space_counts[3],
-            "dk": new_space_counts[4],
-            "bowser": new_space_counts[5]
-        }
-
-    res = []
-    for key, value in new_board_data.items():
-        res.extend([BOARD_SPACE_IDS[key]] * value)
-    random.shuffle(res)
+        new_space_values = [int(random.random() * 6) for _ in range(total_spaces - 1)]
+        res = [list(BOARD_SPACE_IDS.values())[x] for x in new_space_values]
+    res.insert(HARDCODED_DUEL_SPACE_INDEXES[board_name], BOARD_SPACE_IDS["duel"])
     return res
+
 
 
 def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> None:

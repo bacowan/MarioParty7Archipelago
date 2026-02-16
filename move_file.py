@@ -1,5 +1,3 @@
-import Utils
-
 FST_OFFSET_POINTER = 0x424
 FST_SIZE_POINTER = 0x428
 FST_ENTRY_COUNT_OFFSET = 0x8
@@ -29,9 +27,7 @@ def move_file(iso_file, file_offset, file_size):
     return new_file_offset
 
 def main():
-    iso_path = Utils.open_filename("Path to ISO to patch", [("ISO", [".iso"])])
-    if iso_path == "":
-        return
+    iso_path = r"C:\archipelago\roms\Mario Party 7 (USA) (Rev 1).iso"
     filename = input("Name of file to move to end: ")
     with open(iso_path, "r+b") as iso_file:
         iso_file.seek(FST_OFFSET_POINTER)
