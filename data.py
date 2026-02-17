@@ -119,3 +119,8 @@ BOARD_SPACE_DATA: Dict[str, Dict[str, int]] = {
         "bowser": 0
     }
 }
+
+# RAM Map
+RAM_LOCATION_MAX_DICE_BLOCK =   0x81720000
+RAM_LOCATION_MAX_WALLET =       0x81720001
+RAM_LOCATION_MAX_CAPSULES =     0x81720003

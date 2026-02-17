@@ -14,8 +14,6 @@ from .space_data import SpaceData
 if TYPE_CHECKING:
     from . import MarioParty7World
 
-
-
 class MarioParty7ProcedurePatch(APProcedurePatch):
     game = "Mario Party 7"
     hash = "BD367C67FCA5D93E581A43D1F61F4514"

@@ -16,12 +16,12 @@ def create_event_item(name: str, player: int) -> MarioParty7Item:
 
 def create_items(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
     board_unlocks = [
-        create_item("Grand Canal", player),
-        create_item("Pagoda Peak", player),
-        create_item("Pyramid Park", player),
-        create_item("Neon Heights", player),
-        create_item("Windmillville", player),
-        create_item("Bowser's Enchanted Inferno", player)
+        create_item("Grand Canal Key", player),
+        create_item("Pagoda Peak Key", player),
+        create_item("Pyramid Park Key", player),
+        create_item("Neon Heights Key", player),
+        create_item("Windmillville Key", player),
+        create_item("Bowser's Enchanted Inferno Key", player)
     ]
 
     if options.win_condition.value == options.win_condition.option_beat_bowsers_enchanted_inferno:
@@ -71,17 +71,15 @@ def create_items(world: MultiWorld, options: MarioParty7Options, player: int) ->
 progression_items = [
     "Progressive Dice Block",
     "Progressive Wallet",
-    "Shop Menu Navigation",
-    "Star Purchase Menu Navigation",
     "Minigame Jump",
     "Minigame Run",
     "Minigame Mash",
-    "Grand Canal",
-    "Pagoda Peak",
-    "Pyramid Park",
-    "Neon Heights",
-    "Windmillville",
-    "Bowser's Enchanted Inferno"
+    "Grand Canal Key",
+    "Pagoda Peak Key",
+    "Pyramid Park Key",
+    "Neon Heights Key",
+    "Windmillville Key",
+    "Bowser's Enchanted Inferno Key"
 ]
 
 useful_items = [
@@ -105,7 +103,7 @@ item_classifications = {
 item_name_to_id = {name: address for address, name in enumerate(item_classifications, 1)}
 
 item_name_groups = {
-    "Boards": { "Grand Canal", "Pyramid Park", "Neon Heights", "Windmillville", "Bower's Enchanted Inferno" }
+    "Boards": { "Grand Canal Key", "Pyramid Park Key", "Neon Heights Key", "Windmillville Key", "Bower's Enchanted Inferno Key" }
 }
 
 dice_sizes = [1, 2, 5, 10]

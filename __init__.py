@@ -61,7 +61,11 @@ def launch_client(*args: str):
     from .Mp7Client import main
     if len(args) > 0:
         import Patch
+        #logger.info("patch file was supplied - creating rom...")
         meta, rom_file = Patch.create_rom_file(args[0])
+        if "server" in meta and not args.connect:
+            args.connect = meta["server"]
+        #logger.info(f"wrote rom file to {rom_file}")
     launch_subprocess(main, name="Mario Party 7 client")
 
 

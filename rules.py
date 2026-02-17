@@ -35,73 +35,73 @@ def set_shop_sanity_rules(world: MultiWorld, options: MarioParty7Options, player
 
     # Grand Canal
     add_rule(world.get_location("Grand Canal Orb Hut 1 Left Item", player),
-             lambda state: state.has("Grand Canal", player))
+             lambda state: state.has("Grand Canal Key", player))
     add_rule(world.get_location("Grand Canal Orb Hut 1 Middle Item", player),
-             lambda state: state.has("Grand Canal", player))
+             lambda state: state.has("Grand Canal Key", player))
     add_rule(world.get_location("Grand Canal Orb Hut 1 Right Item", player),
-             lambda state: state.has("Grand Canal", player))
+             lambda state: state.has("Grand Canal Key", player))
     add_rule(world.get_location("Grand Canal Orb Hut 2 Left Item", player),
-             lambda state: state.has("Grand Canal", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Grand Canal Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Grand Canal Orb Hut 2 Middle Item", player),
-             lambda state: state.has("Grand Canal", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Grand Canal Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Grand Canal Orb Hut 2 Right Item", player),
-             lambda state: state.has("Grand Canal", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Grand Canal Key", player) and can_roll_at_least(5, options, state, player))
 
     # Pagoda Peak
     add_rule(world.get_location("Pagoda Peak Orb Hut 1 Left Item", player),
-             lambda state: state.has("Pagoda Peak", player))
+             lambda state: state.has("Pagoda Peak Key", player))
     add_rule(world.get_location("Pagoda Peak Orb Hut 1 Middle Item", player),
-             lambda state: state.has("Pagoda Peak", player))
+             lambda state: state.has("Pagoda Peak Key", player))
     add_rule(world.get_location("Pagoda Peak Orb Hut 1 Right Item", player),
-             lambda state: state.has("Pagoda Peak", player))
+             lambda state: state.has("Pagoda Peak Key", player))
     add_rule(world.get_location("Pagoda Peak Orb Hut 2 Left Item", player),
-             lambda state: state.has("Pagoda Peak", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Pagoda Peak Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Pagoda Peak Orb Hut 2 Middle Item", player),
-             lambda state: state.has("Pagoda Peak", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Pagoda Peak Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Pagoda Peak Orb Hut 2 Right Item", player),
-             lambda state: state.has("Pagoda Peak", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Pagoda Peak Key", player) and can_roll_at_least(5, options, state, player))
 
     # Neon Heights
     add_rule(world.get_location("Neon Heights Orb Hut 1 Left Item", player),
-             lambda state: state.has("Neon Heights", player) and can_roll_at_least(2, options, state, player))
+             lambda state: state.has("Neon Heights Key", player) and can_roll_at_least(2, options, state, player))
     add_rule(world.get_location("Neon Heights Orb Hut 1 Middle Item", player),
-             lambda state: state.has("Neon Heights", player) and can_roll_at_least(2, options, state, player))
+             lambda state: state.has("Neon Heights Key", player) and can_roll_at_least(2, options, state, player))
     add_rule(world.get_location("Neon Heights Orb Hut 1 Right Item", player),
-             lambda state: state.has("Neon Heights", player) and can_roll_at_least(2, options, state, player))
+             lambda state: state.has("Neon Heights Key", player) and can_roll_at_least(2, options, state, player))
     add_rule(world.get_location("Neon Heights Orb Hut 2 Left Item", player),
-             lambda state: state.has("Neon Heights", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Neon Heights Key", player) and can_roll_at_least(10, options, state, player))
     add_rule(world.get_location("Neon Heights Orb Hut 2 Middle Item", player),
-             lambda state: state.has("Neon Heights", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Neon Heights Key", player) and can_roll_at_least(10, options, state, player))
     add_rule(world.get_location("Neon Heights Orb Hut 2 Right Item", player),
-             lambda state: state.has("Neon Heights", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Neon Heights Key", player) and can_roll_at_least(10, options, state, player))
 
     # Windmillville
     add_rule(world.get_location("Windmillville Orb Hut 1 Left Item", player),
-             lambda state: state.has("Windmillville", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Windmillville Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Windmillville Orb Hut 1 Middle Item", player),
-             lambda state: state.has("Windmillville", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Windmillville Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Windmillville Orb Hut 1 Right Item", player),
-             lambda state: state.has("Windmillville", player) and can_roll_at_least(5, options, state, player))
+             lambda state: state.has("Windmillville Key", player) and can_roll_at_least(5, options, state, player))
     add_rule(world.get_location("Windmillville Orb Hut 2 Left Item", player),
-             lambda state: state.has("Windmillville", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Windmillville Key", player) and can_roll_at_least(10, options, state, player))
     add_rule(world.get_location("Windmillville Orb Hut 2 Middle Item", player),
-             lambda state: state.has("Windmillville", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Windmillville Key", player) and can_roll_at_least(10, options, state, player))
     add_rule(world.get_location("Windmillville Orb Hut 2 Right Item", player),
-             lambda state: state.has("Windmillville", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Windmillville Key", player) and can_roll_at_least(10, options, state, player))
 
     # Bowser's Enchanted Inferno
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 1 Left Item", player),
-             lambda state: state.has("Bowser's Enchanted Inferno", player))
+             lambda state: state.has("Bowser's Enchanted Inferno Key", player))
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 1 Middle Item", player),
-             lambda state: state.has("Bowser's Enchanted Inferno", player))
+             lambda state: state.has("Bowser's Enchanted Inferno Key", player))
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 1 Right Item", player),
-             lambda state: state.has("Bowser's Enchanted Inferno", player))
+             lambda state: state.has("Bowser's Enchanted Inferno Key", player))
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 2 Left Item", player),
-             lambda state: state.has("Bowser's Enchanted Inferno", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Bowser's Enchanted Inferno Key", player) and can_roll_at_least(10, options, state, player))
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 2 Middle Item", player),
-             lambda state: state.has("Bowser's Enchanted Inferno", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Bowser's Enchanted Inferno Key", player) and can_roll_at_least(10, options, state, player))
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 2 Right Item", player),
-             lambda state: state.has("Bowser's Enchanted Inferno", player) and can_roll_at_least(10, options, state, player))
+             lambda state: state.has("Bowser's Enchanted Inferno Key", player) and can_roll_at_least(10, options, state, player))
 
 def set_minigame_rules(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
     add_rule(world.get_location("Warp Pipe Dreams Beaten", player),
@@ -165,26 +165,26 @@ def set_coin_rules(world: MultiWorld, options: MarioParty7Options, player: int) 
 def set_board_rules(world: MultiWorld, options: MarioParty7Options, player: int) -> None:
 
     set_rule(world.get_entrance("Menu -> Grand Canal", player),
-             lambda state: state.has("Grand Canal", player))
+             lambda state: state.has("Grand Canal Key", player))
     set_rule(world.get_entrance("Menu -> Pagoda Peak", player),
-             lambda state: state.has("Pagoda Peak", player))
+             lambda state: state.has("Pagoda Peak Key", player))
     set_rule(world.get_entrance("Menu -> Pyramid Park", player),
-             lambda state: state.has("Pyramid Park", player))
+             lambda state: state.has("Pyramid Park Key", player))
     set_rule(world.get_entrance("Menu -> Neon Heights", player),
-             lambda state: state.has("Neon Heights", player))
+             lambda state: state.has("Neon Heights Key", player))
     set_rule(world.get_entrance("Menu -> Windmillville", player),
-             lambda state: state.has("Windmillville", player))
+             lambda state: state.has("Windmillville Key", player))
 
     if options.win_condition == options.win_condition.option_beat_all_stages:
         set_rule(world.get_entrance("Menu -> Bowser's Enchanted Inferno", player),
-                 lambda state: state.has("Bowser's Enchanted Inferno", player))
+                 lambda state: state.has("Bowser's Enchanted Inferno Key", player))
     else:
         set_rule(world.get_entrance("Menu -> Bowser's Enchanted Inferno", player),
-                 lambda state: state.has("Grand Canal", player)
-                    and state.has("Pagoda Peak", player)
-                    and state.has("Pyramid Park", player)
-                    and state.has("Neon Heights", player)
-                    and state.has("Windmillville", player))
+                 lambda state: state.has("Grand Canal Key", player)
+                    and state.has("Pagoda Peak Key", player)
+                    and state.has("Pyramid Park Key", player)
+                    and state.has("Neon Heights Key", player)
+                    and state.has("Windmillville Key", player))
 
     # assume that you can only beat any given stage with a big enough dice block
     add_rule(world.get_location("Grand Canal Beaten", player),
