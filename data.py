@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, List
 
 # the board files are split into sub-files. The data for what spaces are what colour is in the 3rd file
 SPACE_DATA_INDEXES: Dict[str, int] = {
@@ -10,13 +10,27 @@ SPACE_DATA_INDEXES: Dict[str, int] = {
     "bowsers_enchanted_inferno":    1,
 }
 
-ASSEMBLY_OFFSETS: Dict[str, int] = {
-    "fix_die_max_hook":         0x001A_9D24,
-    "fix_die_max":              0x0002_0924,
-    "max_coin_count_1_hook":    0x0018_3D70,
-    "max_coin_count_1":         0x0002_09B8,
-    "max_coin_count_2_hook":    0x0005_BF34,
-    "max_coin_count_2":         0x0002_0A44,
+ASSEMBLY_OFFSETS: Dict[str, int | List[int]] = {
+    "fix_die_max_hook":                 0x001A_9D24,
+    "fix_die_max":                      0x0002_0924,
+    "max_coin_count_1_hook":            0x0018_3D70,
+    "max_coin_count_1":                 0x0002_09B8,
+    "max_coin_count_2_hook":            0x0005_BF34,
+    "max_coin_count_2":                 0x0002_0A44,
+    "max_capsule_hook":                 0x0018_4658,
+    "max_capsule":                      0x0002_21C0,
+    "set_max_speed_hook":               0x0009_D728,
+    "set_max_speed":                    0x0002_2520,
+    "lock_jump_hook":                   0x000E_4ECC,
+    "lock_jump":                        0x0002_23B8,
+    "lock_jump_hook_2":                 0x000B_F7D0,
+    "lock_jump_2":                      0x0002_242C,
+    "unlock_boards":                    [0x349B_D26C, 0x349B_D95C],
+    "bowsers_inferno_lock_override":    [0x349B_D300, 0x349B_D9F0],
+    "fix_minigame_selection_hook":      0x0023_D6B8,
+    "fix_minigame_selection":           0x0002_2034,
+    "set_shop_items_hook":              0x0023_4234,
+    "set_shop_items":                   0x0002_2204,
 }
 
 FST_OFFSETS: Dict[str, int] = {

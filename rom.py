@@ -39,15 +39,28 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
         patch_data = json.loads(self.get_file("data.json"))
 
         with open(target, 'r+b') as iso:
+            unlock_boards(iso)
             if patch_data["progressive_dice_blocks"]:
                 set_progressive_dice_blocks(iso)
             if patch_data["progressive_wallet"]:
                 set_progressive_wallet(iso)
+            if patch_data["progressive_capsule_capacity"]:
+                set_progressive_capsule_capacity(iso)
+            if patch_data["locked_minigame_actions"]:
+                set_locked_minigame_actions(iso)
+            if patch_data["minigame_sanity"]:
+                set_minigame_sanity(iso)
+            if patch_data["shop_sanity"]:
+                set_shop_sanity(iso)
             if patch_data["board_data"] is not None:
                 for (board, space_data) in patch_data["board_data"].items():
                     set_board_spaces(iso, board, space_data)
 
-def set_progressive_wallet(iso:BinaryIO):
+def unlock_boards(iso: BinaryIO):
+    write_assembly("unlock_boards", iso)
+    write_assembly("bowsers_inferno_lock_override", iso)
+
+def set_progressive_wallet(iso: BinaryIO):
     write_assembly("max_coin_count_1_hook", iso)
     write_assembly("max_coin_count_1", iso)
     write_assembly("max_coin_count_2_hook", iso)
@@ -56,6 +69,26 @@ def set_progressive_wallet(iso:BinaryIO):
 def set_progressive_dice_blocks(iso: BinaryIO):
     write_assembly("fix_die_max_hook", iso)
     write_assembly("fix_die_max", iso)
+
+def set_progressive_capsule_capacity(iso: BinaryIO):
+    write_assembly("max_capsule_hook", iso)
+    write_assembly("max_capsule", iso)
+
+def set_locked_minigame_actions(iso: BinaryIO):
+    write_assembly("set_max_speed_hook", iso)
+    write_assembly("set_max_speed", iso)
+    write_assembly("lock_jump_hook", iso)
+    write_assembly("lock_jump", iso)
+    write_assembly("lock_jump_hook_2", iso)
+    write_assembly("lock_jump_2", iso)
+
+def set_minigame_sanity(iso: BinaryIO):
+    write_assembly("fix_minigame_selection_hook", iso)
+    write_assembly("fix_minigame_selection", iso)
+
+def set_shop_sanity(iso: BinaryIO):
+    write_assembly("set_shop_items_hook", iso)
+    write_assembly("set_shop_items", iso)
 
 def set_board_spaces(iso: BinaryIO, board: str, space_data: List[int]):
     # load compressed data and decompress
@@ -140,8 +173,14 @@ def load_assembly(bin_name: str) -> bytes:
         return binary_file.read()
 
 def write_assembly(bin_name: str, iso: BinaryIO):
-    iso.seek(ASSEMBLY_OFFSETS[bin_name])
-    iso.write(load_assembly(bin_name))
+    assembly_offset = ASSEMBLY_OFFSETS[bin_name]
+    if isinstance(assembly_offset, int):
+        iso.seek(assembly_offset)
+        iso.write(load_assembly(bin_name))
+    else:
+        for offset in assembly_offset:
+            iso.seek(offset)
+            iso.write(load_assembly(bin_name))
 
 def randomize_board(board_name: str, is_balanced: bool) -> List[int]:
     board_data = BOARD_SPACE_DATA[board_name]
@@ -181,6 +220,9 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
     patch_data = {
         "progressive_dice_blocks": world.options.dice_block_progression == DiceBlockProgression.option_true,
         "progressive_wallet": world.options.wallet_progression.value,
+        "progressive_capsule_capacity": world.options.capsule_capacity_progression.value,
+        "locked_minigame_actions": world.options.locked_minigame_actions.value,
+        "minigame_sanity": world.options.minigame_sanity.value,
         "board_data": boards
     }
 
