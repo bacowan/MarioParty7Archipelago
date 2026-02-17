@@ -223,6 +223,7 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
         "progressive_capsule_capacity": world.options.capsule_capacity_progression.value,
         "locked_minigame_actions": world.options.locked_minigame_actions.value,
         "minigame_sanity": world.options.minigame_sanity.value,
+        "shop_sanity": world.options.shop_sanity.value,
         "board_data": boards
     }
 
