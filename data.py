@@ -30,7 +30,7 @@ ASSEMBLY_OFFSETS: Dict[str, int | List[int]] = {
     "fix_minigame_selection_hook":      0x0023_D6B8,
     "fix_minigame_selection":           0x0002_2034,
     "set_shop_items_hook":              0x0023_4234,
-    "set_shop_items":                   0x0002_2204,
+    "set_shop_items":                   0x0002_2204
 }
 
 FST_OFFSETS: Dict[str, int] = {

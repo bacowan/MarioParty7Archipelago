@@ -57,6 +57,7 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
 def unlock_boards(iso: BinaryIO):
     write_assembly("unlock_boards", iso)
     write_assembly("bowsers_inferno_lock_override", iso)
+    #write_assembly("lock_initial_board", iso)
 
 def set_progressive_wallet(iso: BinaryIO):
     write_assembly("max_coin_count_1_hook", iso)

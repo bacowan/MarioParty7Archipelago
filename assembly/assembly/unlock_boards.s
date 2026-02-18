@@ -12,12 +12,14 @@ ori     r31, r31, 0xA605
 # Loop through each location
 loop_start:
 lbzx    r5, r4, r3          # r5 is whether or not the stage is unlocked
+rlwinm  r5, r5, 31, 1, 31   # Bitshift right 1. Treat 0b1x as unlocked. 1 is what the game will set it as, so we will ignore this value
 xori    r5, r5, 1           # unlocked/locked is inversed in the save file
+
+# for some reason these two lines get messed up, so replace them with nops
+nop
+nop
+
 stb     r5, 0(r31)
-
-nop
-nop
-
 addi    r3, r3, 1
 addi    r31, r31, 2         # the store location is 2 bytes each and the load location is 1 byte each
 cmpwi   cr0, r3, 6          # check all 6 stages
@@ -25,7 +27,6 @@ blt     loop_start
 b       end
 
 # The overwritten code is 24 lines long, so replace the rest with no-ops
-nop
 nop
 nop
 nop

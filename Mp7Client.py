@@ -58,6 +58,7 @@ class MarioParty7Context(CommonContext):
         self.dolphin_status: str = CONNECTION_INITIAL_STATUS
         self.awaiting_rom: bool = False
         self.item_received_count: int = 0
+        self.is_loaded = False
 
     async def server_auth(self, password_requested: bool = False) -> None:
         """
@@ -72,9 +73,19 @@ class MarioParty7Context(CommonContext):
 
     def on_connection(self):
         # do any setup related to the save file and rom itself
-        self.item_received_count = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION)
+        self.is_loaded = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION - 1) > 0
+        if self.is_loaded:
+            self.item_received_count = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION)
 
     async def update_game_state(self) -> None:
+        # wait until the game save has been loaded
+        if not self.is_loaded:
+            self.is_loaded = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION - 1) > 0
+            if self.is_loaded:
+                self.item_received_count = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION)
+            else:
+                return
+
         # Go through each new item and handle it
         for item in self.items_received[self.item_received_count:]:
             handle_item(item, self.stored_data)
