@@ -1,11 +1,11 @@
 # This function starts at 0x804ed7a0 and goes until 0x804ed7fc.
 # Loop through and copy each board's "unlocked" value.
-# Base save location is at 0x80529ec2 with an offset of one byte.
+# Base save location is at 0x8172000E with an offset of one byte.
 # Loaded into 0x8052a604 with an offset of 2 bytes.
 
 li      r3, 0               # r3 is the current stage index
-lis     r4, 0x8052          # r4 is the location in the save values
-ori     r4, r4, 0x9EC2
+lis     r4, 0x8172          # r4 is the location in the save values
+ori     r4, r4, 0x000E
 lis     r31, 0x8052         # r31 is the store location
 ori     r31, r31, 0xA605
 
