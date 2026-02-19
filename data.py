@@ -46,8 +46,8 @@ FILE_OFFSETS: Dict[str, int] = {
     "grand_canal":                  0x4EEC7140,
     "pagoda_peak":                  0x4EF67644,
     "pyramid_park":                 0x4F086860,
-    "windmillville":                0x4F24C2B4,
-    "neon_heights":                 0x4F19B3E4,
+    "windmillville":                0x4F19B3E4,
+    "neon_heights":                 0x4F24C2B4,
     "bowsers_enchanted_inferno":    0x4F36C4F4,
 }
 
@@ -55,8 +55,8 @@ FILE_SIZES: Dict[str, int] = {
     "grand_canal":                  0x0A0502,
     "pagoda_peak":                  0x11F21C,
     "pyramid_park":                 0x114B84,
-    "windmillville":                0x12023E,
-    "neon_heights":                 0x0B0ECE,
+    "windmillville":                0x0B0ECE,
+    "neon_heights":                 0x12023E,
     "bowsers_enchanted_inferno":    0x13034C,
 }
 
@@ -95,20 +95,20 @@ BOARD_SPACE_DATA: Dict[str, Dict[str, int]] = {
         "bowser": 3
     },
     "windmillville": {
-        "blue": 36,
-        "red": 5,
-        "mic": 4,
-        "duel": 8,
-        "dk": 3,
-        "bowser": 4
-    },
-    "neon_heights": {
         "blue": 38,
         "red": 10,
         "mic": 3,
         "duel": 6,
         "dk": 3,
         "bowser": 3
+    },
+    "neon_heights": {
+        "blue": 36,
+        "red": 5,
+        "mic": 4,
+        "duel": 8,
+        "dk": 3,
+        "bowser": 4
     },
     "bowsers_enchanted_inferno": {
         "blue": 10,
