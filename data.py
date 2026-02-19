@@ -1,5 +1,35 @@
 from typing import Dict, List
 
+CAPSULE_IDS = [
+    0x0,
+    0x1,
+    0x2,
+    0x3,
+    0x4,
+    0x5,
+    0x6,
+    0x7,
+    0xA,
+    0xB,
+    0xC,
+    0xD,
+    0xE,
+    0xF,
+    0x10,
+    0x14,
+    0x15,
+    0x16,
+    0x17,
+    0x18,
+    0x19,
+    0x1E,
+    0x1F,
+    0x20,
+    0x21,
+    0x22,
+    0x23,
+]
+
 # the board files are split into sub-files. The data for what spaces are what colour is in the 3rd file
 SPACE_DATA_INDEXES: Dict[str, int] = {
     "grand_canal":                  42,
@@ -124,6 +154,12 @@ BOARD_SPACE_DATA: Dict[str, Dict[str, int]] = {
 RAM_LOCATION_MAX_DICE_BLOCK =   0x81720000
 RAM_LOCATION_MAX_WALLET =       0x81720001
 RAM_LOCATION_MAX_CAPSULES =     0x81720003
+
+RAM_LOCATION_P1_INFO =          0x80290c98
+RAM_LOCATION_P2_INFO =          0x80290da8
+
+COIN_OFFSET_FROM_PLAYER_LOCATION =      0x26
+CAPSULE_OFFSET_FROM_PLAYER_LOCATION =   0x6
 
 # ap save data locations
 GRAND_CANAL_UNLOCK_OFFSET =                 0x8172000E

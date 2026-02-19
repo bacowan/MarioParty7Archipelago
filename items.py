@@ -83,8 +83,7 @@ progression_items = [
 ]
 
 useful_items = [
-    "Progressive Capsule Capacity",
-    "Board Event Menu Navigation"
+    "Progressive Capsule Capacity"
 ]
 
 filler_items = [
