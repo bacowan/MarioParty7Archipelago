@@ -8,7 +8,7 @@ from settings import get_settings
 from .compression import lzss_decompress, lzss_compress
 from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS, FILE_OFFSETS, FILE_SIZES, FST_OFFSETS, \
     SPACE_DATA_INDEXES
-from .options import RandomizeBoardSpaces, DiceBlockProgression, WalletProgression
+from .options import RandomizeBoardSpaces, DiceBlockProgression, WalletProgression, ShopSanity
 from .space_data import SpaceData
 
 if TYPE_CHECKING:
@@ -57,7 +57,6 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
 def unlock_boards(iso: BinaryIO):
     write_assembly("unlock_boards", iso)
     write_assembly("bowsers_inferno_lock_override", iso)
-    #write_assembly("lock_initial_board", iso)
 
 def set_progressive_wallet(iso: BinaryIO):
     write_assembly("max_coin_count_1_hook", iso)
@@ -215,6 +214,10 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
             "neon_heights": randomize_board("neon_heights", is_balanced),
             "bowsers_enchanted_inferno": randomize_board("bowsers_enchanted_inferno", is_balanced)
         }
+
+    if world.options.shop_sanity == ShopSanity.option_true:
+        for location in world.multiworld.get_locations(world.player):
+            print("name: " + location.name + "; item: " + location.item.name)
 
     patch_data = {
         "progressive_dice_blocks": world.options.dice_block_progression == DiceBlockProgression.option_true,

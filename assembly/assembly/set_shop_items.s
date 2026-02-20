@@ -32,9 +32,9 @@ bne     player_check
 # Check what the current shop is. The current space is stored in the player structure + 0x15
 lbz     r18, 0x15(r18)
 
-# load the appropriate items into the shop. Leave vanilla items alone (represented by 0), and update
+# load the appropriate items into the shop. Leave vanilla items alone (represented by 1), and update
 # archipelago items. This is a bit mask of 4 bytes (30 bits; the most significant 2 are ignored).
-# 0 means that the item should be left alone.
+# 1 means that the item should be left alone.
 
 # r19: mask of 1 bit that will correspond to the rightmost item of any given shop.
 #   It will be shifted twice to the right to check the left and middle items.
@@ -100,7 +100,7 @@ lwz     r18, 0x9(r18)
 
 # r20: temp register for values to save.
 # r21: offset for the capsule info array for item 1A. We will use the unused item ids of 1A, 1B, and 1C
-# r22: index of current orb relative to all archapelago orbs
+# r22: index of current orb relative to all archipelago orbs
 lis     r21, 0x8027
 ori     r21, r21, 0x4898
 cntlzw  r22, r19                    # count leading zeros in r19
@@ -110,7 +110,7 @@ subf    r22, r22, r20               # convert to trailing zeros
 
 # leftmost shop item
 and.    r20, r19, r18
-beq     middle_shop_item
+bne     middle_shop_item
 
 # store the new item id
 li      r20, 0x1A
@@ -136,7 +136,7 @@ middle_shop_item:
 slwi    r19, r19, 1         # increment the shop item ordinal
 addi    r22, r22, 1         # as well as the index
 and.    r20, r19, r18
-beq     right_shop_item
+bne     right_shop_item
 
 # store the new item id
 li      r20, 0x1B
@@ -162,7 +162,7 @@ right_shop_item:
 slwi    r19, r19, 1                 # increment the shop item ordinal
 addi    r22, r22, 1                 # as well as the index
 and.    r20, r19, r18
-beq     shop_item_end
+bne     shop_item_end
 
 # store the new item id
 li      r20, 0x1C
