@@ -7,7 +7,7 @@ from worlds.Files import APProcedurePatch
 from settings import get_settings
 from .compression import lzss_decompress, lzss_compress
 from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS, FILE_OFFSETS, FILE_SIZES, FST_OFFSETS, \
-    SPACE_DATA_INDEXES
+    SPACE_DATA_INDEXES, SHOP_STAGE_ORDER, SHOP_HUT_ORDER, SHOP_ITEM_ORDER, ITEM_NAMES_BASE_ADDRESS, MAX_ITEM_NAME_LENGTH
 from .options import RandomizeBoardSpaces, DiceBlockProgression, WalletProgression, ShopSanity
 from .space_data import SpaceData
 
@@ -49,7 +49,7 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
             if patch_data["minigame_sanity"]:
                 set_minigame_sanity(iso)
             if patch_data["shop_sanity"]:
-                set_shop_sanity(iso)
+                set_shop_sanity(iso, patch_data["shop_items"])
             if patch_data["board_data"] is not None:
                 for (board, space_data) in patch_data["board_data"].items():
                     set_board_spaces(iso, board, space_data)
@@ -84,9 +84,49 @@ def set_minigame_sanity(iso: BinaryIO):
     write_assembly("fix_minigame_selection_hook", iso)
     write_assembly("fix_minigame_selection", iso)
 
-def set_shop_sanity(iso: BinaryIO):
+def set_shop_sanity(iso: BinaryIO, patch_items: Dict[str, tuple[str, str]]):
     write_assembly("set_shop_items_hook", iso)
     write_assembly("set_shop_items", iso)
+
+    # set item names
+    item_name_offset_address = ITEM_NAMES_BASE_ADDRESS + 4
+    iso.seek(item_name_offset_address)
+    item_name_offset = int.from_bytes(iso.read(4), "big")
+    for stage in SHOP_STAGE_ORDER:
+        for hut in SHOP_HUT_ORDER:
+            for item_ordinal in SHOP_ITEM_ORDER:
+                # get the name of the item and convert to bytes
+                location_name = f"{stage} {hut} {item_ordinal}"
+                (item_name, player) = patch_items.get(location_name)
+                item_text = f"{item_name} for {player}"
+                item_text = item_text[:MAX_ITEM_NAME_LENGTH]
+                item_bytes = encode_text(item_text)
+
+                # write the new data
+                iso.seek(ITEM_NAMES_BASE_ADDRESS + item_name_offset)
+                iso.write(item_bytes)
+                iso.seek(item_name_offset_address)
+                iso.write(item_name_offset.to_bytes(4, "big"))
+
+                # update the pointers
+                item_name_offset_address += 4
+                item_name_offset += len(item_bytes) + (4 - len(item_bytes) % 4)
+
+CUSTOM_ENCODINGS = {
+    "\n": 0xC2,
+    " ": 0x10,
+    "-": 0x3D
+}
+def encode_text(text: str) -> bytes:
+    res = bytearray()
+    for char in text:
+        if char in CUSTOM_ENCODINGS:
+            res.append(CUSTOM_ENCODINGS[char])
+        else:
+            res.append(ord(char))
+    res.append(0xFF)
+    return res
+
 
 def set_board_spaces(iso: BinaryIO, board: str, space_data: List[int]):
     # load compressed data and decompress
@@ -215,9 +255,18 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
             "bowsers_enchanted_inferno": randomize_board("bowsers_enchanted_inferno", is_balanced)
         }
 
+    shop_items: Optional[Dict[str, (str, str)]] = None
     if world.options.shop_sanity == ShopSanity.option_true:
+        shop_items = {}
+        location_names = []
+        for stage in SHOP_STAGE_ORDER:
+            for hut in SHOP_HUT_ORDER:
+                for item in SHOP_ITEM_ORDER:
+                    location_names.append(f"{stage} {hut} {item}")
         for location in world.multiworld.get_locations(world.player):
-            print("name: " + location.name + "; item: " + location.item.name)
+            if location.name in location_names:
+                player_name = "You" if location.item.player == world.player else world.multiworld.worlds[location.item.player].player_name
+                shop_items[location.name] = (location.item.name, player_name)
 
     patch_data = {
         "progressive_dice_blocks": world.options.dice_block_progression == DiceBlockProgression.option_true,
@@ -226,7 +275,8 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
         "locked_minigame_actions": world.options.locked_minigame_actions.value,
         "minigame_sanity": world.options.minigame_sanity.value,
         "shop_sanity": world.options.shop_sanity.value,
-        "board_data": boards
+        "board_data": boards,
+        "shop_items": shop_items,
     }
 
     patch.write_file("data.json", json.dumps(patch_data).encode())
