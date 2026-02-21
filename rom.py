@@ -89,7 +89,7 @@ def set_shop_sanity(iso: BinaryIO, patch_items: Dict[str, tuple[str, str]]):
     write_assembly("set_shop_items", iso)
 
     # set item names
-    item_name_offset_address = ITEM_NAMES_BASE_ADDRESS + 4
+    item_name_offset_address = ITEM_NAMES_BASE_ADDRESS
     iso.seek(item_name_offset_address)
     item_name_offset = int.from_bytes(iso.read(4), "big")
     for stage in SHOP_STAGE_ORDER:
@@ -118,7 +118,7 @@ CUSTOM_ENCODINGS = {
     "-": 0x3D
 }
 def encode_text(text: str) -> bytes:
-    res = bytearray()
+    res = bytearray([0x00, 0xFF, 0x00, 0xFF])
     for char in text:
         if char in CUSTOM_ENCODINGS:
             res.append(CUSTOM_ENCODINGS[char])

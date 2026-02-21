@@ -151,11 +151,11 @@ BOARD_SPACE_DATA: Dict[str, Dict[str, int]] = {
 }
 
 # we use the duty-free shop text for archipelago item names
-ITEM_NAMES_BASE_ADDRESS =     0x4CEB2024
-SHOP_STAGE_ORDER =      ["Grand Canal", "Pagoda Peak", "Neon Heights", "Windmillville", "Bowser's Enchanted Inferno"]
-SHOP_HUT_ORDER =    ["Orb Hut 1", "Orb Hut 2"]
-SHOP_ITEM_ORDER =            ["Left Item", "Middle Item", "Right Item"]
-MAX_ITEM_NAME_LENGTH = 360 # based on the total space for text in this area averaged over 36 items (conservative estimate)
+ITEM_NAMES_BASE_ADDRESS =   0x4CEB2028
+SHOP_STAGE_ORDER =          ["Grand Canal", "Pagoda Peak", "Neon Heights", "Windmillville", "Bowser's Enchanted Inferno"]
+SHOP_HUT_ORDER =            ["Orb Hut 1", "Orb Hut 2"]
+SHOP_ITEM_ORDER =           ["Left Item", "Middle Item", "Right Item"]
+MAX_ITEM_NAME_LENGTH =      360 # based on the total space for text in this area averaged over 36 items (conservative estimate)
 
 # RAM Map
 RAM_LOCATION_MAX_DICE_BLOCK =   0x81720000
