@@ -7,7 +7,9 @@ import traceback
 from typing import Optional
 
 from NetUtils import NetworkItem
+from worlds.mp7 import all_locations, location_name_to_id
 from worlds.mp7.client_item_handler import handle_item
+from worlds.mp7.client_location_handler import location_handlers
 from worlds.mp7.patch_rom import apply_patches
 
 ITEM_COUNT_SAVE_LOCATION = 0x8029D70A # This is in the save file right after the date. I don't _think_ it's being used.
@@ -77,6 +79,28 @@ class MarioParty7Context(CommonContext):
         if self.is_loaded:
             self.item_received_count = dolphin_memory_engine.read_word(ITEM_COUNT_SAVE_LOCATION)
 
+    def update_items(self):
+        # Go through each new item and handle it
+        for item in self.items_received[self.item_received_count:]:
+            handle_item(item, self.stored_data)
+
+        # Update the number of items received in the save file
+        if self.item_received_count < len(self.items_received):
+            self.item_received_count = len(self.items_received)
+            dolphin_memory_engine.write_word(ITEM_COUNT_SAVE_LOCATION, self.item_received_count)
+
+    async def update_locations(self):
+        for location in all_locations:
+            location_id = location_name_to_id[location]
+            if location_id not in self.checked_locations:
+                is_location_checked = location_handlers[location]()
+                if is_location_checked:
+                    self.locations_checked.add(location_id)
+
+        locations_checked = self.locations_checked.difference(self.checked_locations)
+        if locations_checked:
+            await self.send_msgs([{"cmd": "LocationChecks", "locations": locations_checked}])
+
     async def update_game_state(self) -> None:
         # wait until the game save has been loaded
         if not self.is_loaded:
@@ -86,14 +110,8 @@ class MarioParty7Context(CommonContext):
             else:
                 return
 
-        # Go through each new item and handle it
-        for item in self.items_received[self.item_received_count:]:
-            handle_item(item, self.stored_data)
-
-        # Update the number of items received in the save file
-        if self.item_received_count < len(self.items_received):
-            self.item_received_count = len(self.items_received)
-            dolphin_memory_engine.write_word(ITEM_COUNT_SAVE_LOCATION, self.item_received_count)
+        self.update_items()
+        await self.update_locations()
 
 # connect to dolphin and poll to make sure the connection is live
 async def dolphin_sync_task(ctx: MarioParty7Context) -> None:

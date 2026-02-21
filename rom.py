@@ -8,7 +8,7 @@ from settings import get_settings
 from .compression import lzss_decompress, lzss_compress
 from .data import ASSEMBLY_OFFSETS, BOARD_SPACE_DATA, BOARD_SPACE_IDS, FILE_OFFSETS, FILE_SIZES, FST_OFFSETS, \
     SPACE_DATA_INDEXES, SHOP_STAGE_ORDER, SHOP_HUT_ORDER, SHOP_ITEM_ORDER, ITEM_NAMES_BASE_ADDRESS, MAX_ITEM_NAME_LENGTH
-from .options import RandomizeBoardSpaces, DiceBlockProgression, WalletProgression, ShopSanity
+from .options import RandomizeBoardSpaces, DiceBlockProgression, ShopSanity
 from .space_data import SpaceData
 
 if TYPE_CHECKING:
