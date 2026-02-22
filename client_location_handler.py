@@ -46,5 +46,5 @@ location_handlers = {
     "90 Coins in Wallet": coins_in_wallet(90),
     "100 Coins in Wallet": coins_in_wallet(100),
     "150 Coins in Wallet": coins_in_wallet(150),
-    "200 Coins in Wallet": coins_in_wallet(200)
+    "200 Coins in Wallet": coins_in_wallet(200),
 }
