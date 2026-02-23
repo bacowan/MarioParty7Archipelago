@@ -1,3 +1,5 @@
+# RAM Locations
+.equ CURRENT_MINIGAME_OFFSET,          0x80291559
 
 # player data structure
 .equ PLAYER_STRUCT_BASE_OFFSET, 0x80290C98
@@ -7,3 +9,4 @@
 # custom save locations
 .equ MAX_DICE_ROLL_SAVE,        0x8029D70A
 .equ COMPLETED_MINIGAMES_SAVE,  0x81720003
+.equ LOCK_JUMP_SAVE,            0x8172000D
