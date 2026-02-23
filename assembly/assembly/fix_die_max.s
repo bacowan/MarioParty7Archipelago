@@ -3,7 +3,7 @@
 # We will use register r18 from the call-site too.
 
 .include "constants.inc"
-.equ PLAYER_NUMBER_LOC,     0x80291522
+.include "macros.inc"
 .equ RETURN_LINE,           0x8018CC94
 
 # Overwritten code from the callsite that will handle the default case
@@ -11,22 +11,8 @@ rlwinm r0, r3, 1, 0, 30
 addi r3, r1, 44
 lhax r0, r3, r0
 
-# load the current player number into r18
-.equ r_CURRENT_PLAYER_NUMBER, r18
-lis r17, PLAYER_NUMBER_LOC@h
-lbz r_CURRENT_PLAYER_NUMBER, PLAYER_NUMBER_LOC@l(r17)
-
-# the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
-# r18 will now store the full offset.
-.equ r_CURRENT_PLAYER_OFFSET, r18
-mulli r_CURRENT_PLAYER_OFFSET, r_CURRENT_PLAYER_NUMBER, PLAYER_STRUCT_SIZE
-
-# load the cpu difficulty/is-player value into memory
 .equ r_CURRENT_PLAYER_DIFFICULTY, r17
-lis r17, PLAYER_STRUCT_BASE_OFFSET@h
-ori r17, r17, PLAYER_STRUCT_BASE_OFFSET@l
-add r17, r17, r_CURRENT_PLAYER_OFFSET # add the offset to the base memory value
-lbz r_CURRENT_PLAYER_DIFFICULTY, 0(r17)
+GET_CURRENT_PLAYER_DIFFICULTY r_CURRENT_PLAYER_DIFFICULTY, r18
 
 # if it is a computer player, then skip to the end
 andi. r17, r_CURRENT_PLAYER_DIFFICULTY, IS_CPU_MASK_BIT # this bit will be set for CPUs but not human players
