@@ -6,3 +6,4 @@
 
 # custom save locations
 .equ MAX_DICE_ROLL_SAVE,        0x8029D70A
+.equ COMPLETED_MINIGAMES_SAVE,  0x81720003
