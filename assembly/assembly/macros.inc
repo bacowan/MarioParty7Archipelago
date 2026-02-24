@@ -1,4 +1,3 @@
-
 .include "constants.inc"
 
 .equ PLAYER_NUMBER_LOC,     0x80291522
@@ -18,4 +17,9 @@
     ori \reg1, \reg1, PLAYER_STRUCT_BASE_OFFSET@l
     add \reg1, \reg1, \reg2 # add the offset to the base memory value
     lbz \reg1, 0(\reg1)
+.endm
+
+.macro SET_REGISTER reg, val
+    lis \reg, \val@h
+    ori \reg, \reg, \val@l
 .endm
