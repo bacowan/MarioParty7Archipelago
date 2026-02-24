@@ -1,24 +1,20 @@
+.include "constants.inc"
+.include "macros.inc"
+
+.equ r_MAX_COINS, r20
+
 # r20 will hold the max coin count (2 bytes). It's stored in memory at 0x81720001 - 0x81720002
-lis     r20, 0x8172
-ori     r20, r20, 0x0000
-lhz     r20, 1(r20)
+lis     r_MAX_COINS, MAX_COINS@h
+ori     r_MAX_COINS, r20, 0x0000
+lhz     r_MAX_COINS, MAX_COINS@l(r20)
 
 # the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
 # r18 will now store the full offset.
 # r30 stores the current player number (from code called before this)
-mulli   r18, r30, 0x110
+BRANCH_IF_PLAYER r30, r18, r17, common
 
-# load the cpu difficulty/is-player value into memory
-lis     r17, 0x8029
-ori     r17, r17, 0x0C98 # 0x80290C98 is where the first difficulty/is-player value is stored
-add     r17, r17, r18 # add the offset to the base memory value
-lbz     r17, 0(r17)
-
-# if it is a computer player then set the max coin count to 999
-andi.   r17, r17, 0x20 # this bit will be set for CPUs but not human players
-beq     common
-
-li      r20, 999
+# set cpu coin max to 999
+li      r_MAX_COINS, 999
 
 common:
 cmpwi   r30, 0
