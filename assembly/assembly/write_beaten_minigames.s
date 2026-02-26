@@ -50,8 +50,8 @@ addi    r18, r18, -48
 set_end:
 
 # The completed minigames are stored at 0x81720003 and 0x81720004
-lis     r16, BEATEN_GAMES_SAVE@h
-lhz     r19, BEATEN_GAMES_SAVE@l(r16)
+lis     r16, COMPLETED_MINIGAMES_SAVE@h
+lhz     r19, COMPLETED_MINIGAMES_SAVE@l(r16)
 
 # make a bitmask for the current minigame
 lis     r17, 0x8000
