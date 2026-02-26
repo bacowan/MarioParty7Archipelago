@@ -1,30 +1,39 @@
+.include "constants.inc"
+
+.equ WINNER_LOC,        0x802B7F3A
+.equ MINIGAME_INDEX_LOC, 0x80291559
+
+.equ r_WINNER_INDEX,    r18
+.equ r_MINIGAME_INDEX,  r18
+.equ r_MINIGAME_GAP_START, r19
+
 # Find out who won
-lis     r19, 0x802B         # 0x802b7F3A is the location of the winning player index
-lbz     r18, 0x7F3A (r19)
+lis     r19, WINNER_LOC@h         # 0x802b7F3A is the location of the winning player index
+lbz     r_WINNER_INDEX, WINNER_LOC@l (r19)
 
 # the player number will act as an offset from p1's info structure address. Structures are offset by 0x110 bytes.
 # r19 will now store the full offset.
-mulli r18, r18, 0x110
+mulli r18, r18, PLAYER_STRUCT_SIZE
 
 # load the cpu difficulty/is-player value into memory
-lis     r19, 0x8029         # 0x80290C98 is where the first difficulty/is-player value is stored
-add     r19, r19, r18       # add the offset to the base memory value
-lbz     r19, 0x0C98(r19)
+lis     r19, PLAYER_STRUCT_BASE_OFFSET@h         # 0x80290C98 is where the first difficulty/is-player value is stored
+add     r19, r19, r_WINNER_INDEX       # add the offset to the base memory value
+lbz     r19, PLAYER_STRUCT_BASE_OFFSET@l(r19)
 
 # if it is a computer player, then skip to the end
-andi.   r19, r19, 0x20        # this bit will be set for CPUs but not human players
+andi.   r19, r19, IS_CPU_MASK_BIT        # this bit will be set for CPUs but not human players
 bne     end
 
 # get the minigame id
-lis     r19, 0x8029         # 0x80291559 is the location of the winning player index
-lbz     r18, 0x1559 (r19)
+lis     r19, MINIGAME_INDEX_LOC@h         # 0x80291559 is the location of the minigame index
+lbz     r_MINIGAME_INDEX, MINIGAME_INDEX_LOC@l (r19)
 
 # 0 index the minigames.
 # The minigame ids are 45-46, 50-54, 57-61, so we need to exclude the gaps
-li      r19, 47
+li      r19, 47     # does this do anything? Is it supposed to be r15?
 cmplw   r18, r15
 blt     first_set          # 45-46
-li      r19, 55
+li      r19, 55     # does this do anything? Is it supposed to be r15?
 cmplw   r18, r15
 blt     second_set         # 50-54
 
@@ -41,8 +50,8 @@ addi    r18, r18, -48
 set_end:
 
 # The completed minigames are stored at 0x81720003 and 0x81720004
-lis     r16, 0x8172
-lhz     r19, 3(r16)
+lis     r16, BEATEN_GAMES_SAVE@h
+lhz     r19, BEATEN_GAMES_SAVE@l(r16)
 
 # make a bitmask for the current minigame
 lis     r17, 0x8000
