@@ -4,6 +4,8 @@
 # player data structure
 .equ PLAYER_STRUCT_BASE_OFFSET, 0x80290C98
 .equ PLAYER_STRUCT_SIZE,        0x110
+.equ CURRENT_SPACE_OFFSET,      0x15
+
 .equ IS_CPU_MASK_BIT,           0x20
 
 # custom save locations
@@ -13,3 +15,4 @@
 .equ MAX_CAPSULE_SAVE,          0x81720005
 .equ MAX_COINS,                 0x81720001
 .equ MINIGAME_MAX_SPEED_SAVE,   0x81720008
+.equ BOUGHT_ITEMS_SAVE,         0x81720009

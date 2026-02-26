@@ -1,3 +1,46 @@
+.include "constants.inc"
+
+.equ FAKE_ITEM_OFFSET, 0x80274898
+.equ LOOP_BASE_OFFSET, PLAYER_STRUCT_BASE_OFFSET - 0x110
+
+.equ FAKE_ITEM_1_ID,        0x1A
+.equ FAKE_ITEM_2_ID,        0x1B
+.equ FAKE_ITEM_3_ID,        0x1C
+
+.equ EMPTY_ORB_MODEL_INDEX, 0x000F001D
+.equ EMPTY_ORB_TEXT_INDEX,  0x0025
+
+.equ STORE_1_SLOT_MODEL_ID_OFFSET, 0x03
+.equ STORE_1_SLOT_COST_OFFSET,    0x04
+.equ STORE_2_SLOT_MODEL_ID_OFFSET, 0x1F
+.equ STORE_2_SLOT_COST_OFFSET,    0x20
+.equ STORE_3_SLOT_MODEL_ID_OFFSET, 0x3B
+.equ STORE_3_SLOT_COST_OFFSET,    0x3C
+
+.equ ITEM_STRUCT_MODEL_OFFSET,  0x00
+.equ ITEM_STRUCT_TEXT_OFFSET,   0x08
+.equ ITEM_STRUCT_SIZE,          0x28
+
+.equ GRAND_CANAL_LEFT_ID,   0x65
+.equ GRAND_CANAL_RIGHT_ID,  0x67
+.equ PAGODA_PEAK_BOTTOM_ID, 0x10
+.equ PAGODA_PEAK_TOP_ID,    0x46
+.equ NEON_HEIGHTS_LEFT_ID,  0x0F
+.equ NEON_HEIGHTS_RIGHT_ID, 0x77
+.equ WINDMILLVILLE_LEFT_ID, 0x5C
+.equ WINDMILLVILLE_RIGHT_ID, 0x18
+.equ BOWSER_BOTTOM_ID,      0x3B
+.equ BOWSER_TOP_ID,         0x85
+
+.equ r_SHOP_STRUCT_OFFSET,  r26
+.equ r_PLAYER_NUMBER,       r17
+.equ r_PLAYER_STRUCT_OFFSET, r18
+.equ r_SHOP_MASK,           r19
+.equ r_CURRENT_SPACE,       r18
+.equ r_BOUGHT_ITEMS,        r18
+.equ r_FAKE_ITEM_OFFSET,    r21
+.equ r_ITEM_INDEX,          r22
+
 # save registers
 stwu    r1, -32(r1)
 
@@ -13,24 +56,25 @@ stw     r22, 28(r1)
 # Note that we don't bother checking whose turn it is, since CPUs don't actually view this.
 # However, we do have to figure out which player the human is. r18 will temporarily represent
 # the location of the player structure in memory.
-lis     r18, 0x8029
-ori     r18, r18, 0x0B88        # player structure is at 0x80291522; we add 0x110 at the start of every loop, so start at that value - 0x110
-li      r17, 0                  # count how many players we have counted
+lis     r18, LOOP_BASE_OFFSET@h
+# player structure is at 0x80290C98; we add 0x110 at the start of every loop, so start at that value - 0x110
+ori     r_PLAYER_STRUCT_OFFSET, r18, LOOP_BASE_OFFSET@l
+li      r_PLAYER_NUMBER, 0                  # count how many players we have counted
 
 player_check:
-cmpwi   r17, 4                  # break out if we've checked all players
+cmpwi   r_PLAYER_NUMBER, 4                  # break out if we've checked all players
 beq     end
 
-addi    r18, r18, 0x110         # prepare to check the next structure
-addi    r17, r17, 1
+addi    r_PLAYER_STRUCT_OFFSET, r_PLAYER_STRUCT_OFFSET, PLAYER_STRUCT_SIZE        # prepare to check the next structure
+addi    r_PLAYER_NUMBER, r_PLAYER_NUMBER, 1
 
-lbz     r19, 0(r18)             # load the value from memory
+lbz     r19, 0(r_PLAYER_STRUCT_OFFSET)             # load the value from memory
 
-andi.   r19, r19, 0x20          # this bit will be set for CPUs but not human players
+andi.   r19, r19, IS_CPU_MASK_BIT          # this bit will be set for CPUs but not human players
 bne     player_check
 
 # Check what the current shop is. The current space is stored in the player structure + 0x15
-lbz     r18, 0x15(r18)
+lbz     r_CURRENT_SPACE, CURRENT_SPACE_OFFSET(r_PLAYER_STRUCT_OFFSET)
 
 # load the appropriate items into the shop. Leave vanilla items alone (represented by 1), and update
 # archipelago items. This is a bit mask of 4 bytes (30 bits; the most significant 2 are ignored).
@@ -39,55 +83,55 @@ lbz     r18, 0x15(r18)
 # r19: mask of 1 bit that will correspond to the rightmost item of any given shop.
 #   It will be shifted twice to the right to check the left and middle items.
 
-li      r19, 0x1            # This is a mask that will check which shop items are available
+li      r_SHOP_MASK, 0x1            # This is a mask that will check which shop items are available
 
 # grand canal left
-cmpwi   r18, 0x65
+cmpwi   r_CURRENT_SPACE, GRAND_CANAL_LEFT_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # grand canal right
-cmpwi   r18, 0x67
+cmpwi   r_CURRENT_SPACE, GRAND_CANAL_RIGHT_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # pagoda peak bottom
-cmpwi   r18, 0x10
+cmpwi   r_CURRENT_SPACE, PAGODA_PEAK_BOTTOM_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # pagoda peak top
-cmpwi   r18, 0x46
+cmpwi   r_CURRENT_SPACE, PAGODA_PEAK_TOP_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # neon heights left
-cmpwi   r18, 0x0F
+cmpwi   r_CURRENT_SPACE, NEON_HEIGHTS_LEFT_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # neon heights right
-cmpwi   r18, 0x77
+cmpwi   r_CURRENT_SPACE, NEON_HEIGHTS_RIGHT_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
-# windmilleville left
-cmpwi   r18, 0x5C
+# windmillville left
+cmpwi   r_CURRENT_SPACE, WINDMILLVILLE_LEFT_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
-# windmilleville right
-cmpwi   r18, 0x18
+# windmillville right
+cmpwi   r_CURRENT_SPACE, WINDMILLVILLE_RIGHT_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # bowser bottom
-cmpwi   r18, 0x3B
+cmpwi   r_CURRENT_SPACE, BOWSER_BOTTOM_ID
 beq     shop_selection_end
-slwi    r19, r19, 3          # move the 3 bits to the next shop
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
 # bowser top
-cmpwi   r18, 0x85
+cmpwi   r_CURRENT_SPACE, BOWSER_TOP_ID
 beq     shop_selection_end
 b       end
 
@@ -95,92 +139,96 @@ b       end
 shop_selection_end:
 
 # r18: bit flags for each collected shop item from all shops
-lis     r18, 0x8172
-lwz     r18, 0x9(r18)
+lis     r18, BOUGHT_ITEMS_SAVE@h
+lwz     r_BOUGHT_ITEMS, BOUGHT_ITEMS_SAVE@l(r18)
 
 # r20: temp register for values to save.
 # r21: offset for the capsule info array for item 1A. We will use the unused item ids of 1A, 1B, and 1C
 # r22: index of current orb relative to all archipelago orbs
-lis     r21, 0x8027
-ori     r21, r21, 0x4898
-cntlzw  r22, r19                    # count leading zeros in r19
+lis     r21, FAKE_ITEM_OFFSET@h
+ori     r_FAKE_ITEM_OFFSET, r21, FAKE_ITEM_OFFSET@l
+cntlzw  r22, r_SHOP_MASK                    # count leading zeros in r19
 li      r20, 31
-subf    r22, r22, r20               # convert to trailing zeros
+subf    r_ITEM_INDEX, r22, r20              # convert to trailing zeros
 
 
 # leftmost shop item
-and.    r20, r19, r18
+and.    r20, r_SHOP_MASK, r_BOUGHT_ITEMS
 bne     middle_shop_item
 
 # store the new item id
-li      r20, 0x1A
-stb     r20, 3(r26)
+li      r20, FAKE_ITEM_1_ID
+stb     r20, STORE_1_SLOT_MODEL_ID_OFFSET(r_SHOP_STRUCT_OFFSET)
 
 # set the cost for the orb
 li      r20, 5                      # left item has a cost of 5
-stw     r20, 0x04(r26)
+stw     r20, STORE_1_SLOT_COST_OFFSET(r_SHOP_STRUCT_OFFSET)
 
 # set the model for an empty orb
-lis     r20, 0x000F
-ori     r20, r20, 0x001D
-stw     r20, 0(r21)
+lis     r20, EMPTY_ORB_MODEL_INDEX@h
+ori     r20, r20, EMPTY_ORB_MODEL_INDEX@l
+stw     r20, ITEM_STRUCT_MODEL_OFFSET(r_FAKE_ITEM_OFFSET)
 
 # set the text for the orb
-lis     r20, 0x0025
-or      r20, r20, r22               # r22 has the index of the current orb as an archipelago item
-stw     r20, 8(r21)                 # the text of the item is at an offset of 8 bytes from the start
+lis     r20, EMPTY_ORB_TEXT_INDEX
+or      r20, r20, r_ITEM_INDEX               # r22 has the index of the current orb as an archipelago item
+stw     r20, ITEM_STRUCT_TEXT_OFFSET(r_FAKE_ITEM_OFFSET)                 # the text of the item is at an offset of 8 bytes from the start
 
 
 
 middle_shop_item:
-slwi    r19, r19, 1         # increment the shop item ordinal
-addi    r22, r22, 1         # as well as the index
-and.    r20, r19, r18
+slwi    r_SHOP_MASK, r_SHOP_MASK, 1         # increment the shop item ordinal
+addi    r_ITEM_INDEX, r_ITEM_INDEX, 1         # as well as the index
+and.    r20, r_SHOP_MASK, r_BOUGHT_ITEMS
 bne     right_shop_item
 
 # store the new item id
-li      r20, 0x1B
-stb     r20, 0x1F(r26)
+li      r20, FAKE_ITEM_2_ID
+stb     r20, STORE_2_SLOT_MODEL_ID_OFFSET(r_SHOP_STRUCT_OFFSET)
 
 # set the cost for the orb
 li      r20, 10                      # middle item has a cost of 10
-stw     r20, 0x20(r26)
+stw     r20, STORE_2_SLOT_COST_OFFSET(r_SHOP_STRUCT_OFFSET)
 
 # set the model for an empty orb
-lis     r20, 0x000F
-ori     r20, r20, 0x001D
-stw     r20, 0x28(r21)
+.set    MODEL_OFFSET, ITEM_STRUCT_SIZE + ITEM_STRUCT_MODEL_OFFSET
+lis     r20, EMPTY_ORB_MODEL_INDEX@h
+ori     r20, r20, EMPTY_ORB_MODEL_INDEX@l
+stw     r20, MODEL_OFFSET(r_FAKE_ITEM_OFFSET)
 
 # set the text for the orb
-lis     r20, 0x0025
-or      r20, r20, r22               # r22 has the index of the current orb as an archipelago item
-stw     r20, 0x30(r21)              # the text of the item is at an offset of 8 bytes from the start
+.set    TEXT_OFFSET, ITEM_STRUCT_SIZE + ITEM_STRUCT_TEXT_OFFSET
+lis     r20, EMPTY_ORB_TEXT_INDEX
+or      r20, r20, r_ITEM_INDEX               # r22 has the index of the current orb as an archipelago item
+stw     r20, TEXT_OFFSET(r_FAKE_ITEM_OFFSET)              # the text of the item is at an offset of 8 bytes from the start
 
 
 
 right_shop_item:
-slwi    r19, r19, 1                 # increment the shop item ordinal
-addi    r22, r22, 1                 # as well as the index
-and.    r20, r19, r18
+slwi    r_SHOP_MASK, r_SHOP_MASK, 1                 # increment the shop item ordinal
+addi    r_ITEM_INDEX, r_ITEM_INDEX, 1                 # as well as the index
+and.    r20, r_SHOP_MASK, r_BOUGHT_ITEMS
 bne     shop_item_end
 
 # store the new item id
-li      r20, 0x1C
-stb     r20, 0x3B(r26)
+li      r20, FAKE_ITEM_3_ID
+stb     r20, STORE_3_SLOT_MODEL_ID_OFFSET(r_SHOP_STRUCT_OFFSET)
 
 # set the cost for the orb
 li      r20, 20                     # right item has a cost of 20
-stw     r20, 0x3C(r26)
+stw     r20, STORE_3_SLOT_COST_OFFSET(r_SHOP_STRUCT_OFFSET)
 
 # set the model for an empty orb
-lis     r20, 0x000F
-ori     r20, r20, 0x001D
-stw     r20, 0x50(r21)
+.set    MODEL_OFFSET, ITEM_STRUCT_SIZE * 2 + ITEM_STRUCT_MODEL_OFFSET
+lis     r20, EMPTY_ORB_MODEL_INDEX@h
+ori     r20, r20, EMPTY_ORB_MODEL_INDEX@l
+stw     r20, MODEL_OFFSET(r_FAKE_ITEM_OFFSET)
 
 # set the text for the orb
-lis     r20, 0x0025
-or      r20, r20, r22               # r22 has the index of the current orb as an archipelago item
-stw     r20, 0x58(r21)              # the text of the item is at an offset of 8 bytes from the start
+.set    TEXT_OFFSET, ITEM_STRUCT_SIZE * 2 + ITEM_STRUCT_TEXT_OFFSET
+lis     r20, EMPTY_ORB_TEXT_INDEX
+or      r20, r20, r_ITEM_INDEX               # r22 has the index of the current orb as an archipelago item
+stw     r20, TEXT_OFFSET(r_FAKE_ITEM_OFFSET)              # the text of the item is at an offset of 8 bytes from the start
 
 shop_item_end:
 end:
