@@ -12,3 +12,4 @@
 .equ LOCK_JUMP_SAVE,            0x8172000D
 .equ MAX_CAPSULE_SAVE,          0x81720005
 .equ MAX_COINS,                 0x81720001
+.equ MINIGAME_MAX_SPEED_SAVE,   0x81720008
