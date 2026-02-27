@@ -24,7 +24,7 @@ def coins_in_wallet(target_coin_count: int) -> Callable[[], bool]:
     def func() -> bool:
         player_offset = get_human_player_offset()
         coin_offset = player_offset + COIN_OFFSET_FROM_PLAYER_LOCATION
-        coin_count = int.from_bytes(dolphin_memory_engine.read_word(coin_offset), byteorder='big')
+        coin_count = dolphin_memory_engine.read_word(coin_offset)
         return coin_count >= target_coin_count
     return func
 

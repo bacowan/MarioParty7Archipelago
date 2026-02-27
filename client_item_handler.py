@@ -112,7 +112,7 @@ item_handlers = {
     item_name_to_id["Neon Heights Key"]: stage_key(RAM_LOCATION_NEON_HEIGHTS_UNLOCK),
     item_name_to_id["Bowser's Enchanted Inferno Key"]: stage_key(RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_UNLOCK),
     item_name_to_id["1 Coin"]: coins(1),
-    item_name_to_id["5 Coin"]: coins(5),
-    item_name_to_id["10 Coin"]: coins(10),
+    item_name_to_id["5 Coins"]: coins(5),
+    item_name_to_id["10 Coins"]: coins(10),
     item_name_to_id["Random Capsule"]: random_capsule,
 }
