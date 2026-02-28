@@ -4,6 +4,16 @@ from typing import List
 from itertools import chain
 from collections import Counter
 
+SPACE_TYPES = {
+    "blue": 1,
+    "red": 2,
+    "question": 3,
+    "bowser": 4,
+    "duel": 5,
+    "dk": 6,
+    "mic": 11
+}
+
 def lzss_decompress(data: bytes, out_size: int) -> bytes:
     src = 0              # input pointer
     out = bytearray()
@@ -47,8 +57,9 @@ def lzss_decompress(data: bytes, out_size: int) -> bytes:
 
 @dataclass
 class Space:
-    def __init__(self, byt: bytes):
+    def __init__(self, id: int, byt: bytes):
         self._bytes = bytearray(byt)
+        self.id = id
 
     def get_bytes(self) -> bytearray:
         return self._bytes
@@ -58,6 +69,9 @@ class Space:
 
     def get_color(self) -> int:
         return self._bytes[0x2B]
+
+    def __repr__(self):
+        return f"id: {self.id}; color: {self.get_color()}"
 
 @dataclass
 class SpaceData:
@@ -75,11 +89,13 @@ class SpaceData:
         count = struct.unpack(">I", data[:4])[0]
         spaces = []
         i = 4
+        space_id = 0
         while i < len(data):
             connection_count = struct.unpack(">H", data[i + 0x2C:i + 0x2C + 2])[0]
             space_length = 0x2E + connection_count * 2
-            spaces.append(Space(data[i:i + space_length]))
+            spaces.append(Space(space_id, data[i:i + space_length]))
             i += space_length
+            space_id += 1
 
         return cls(
             count,
@@ -89,7 +105,7 @@ class SpaceData:
 
 
 def main():
-    compressed_path = r"C:\archipelago\roms\marioparty7extraction\files\data\w04.bin"
+    compressed_path = r"C:\archipelago\roms\marioparty7extraction\files\data\w06.bin"
     with open(compressed_path, "rb") as f:
         section_count = int.from_bytes(f.read(4), byteorder="big")
         section_offsets = [int.from_bytes(f.read(4), byteorder="big") for _ in range(section_count)]
@@ -114,6 +130,7 @@ def main():
                 print(f"duel: {colors[5]}")
                 print(f"dk: {colors[6]}")
                 print(f"bowser: {colors[4]}")
+                print([hex(space.id) for space in space_data.spaces if space.get_color() in SPACE_TYPES.values()])
                 print()
 
 

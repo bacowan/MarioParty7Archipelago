@@ -1,5 +1,6 @@
 # RAM Locations
 .equ CURRENT_MINIGAME_OFFSET,          0x80291559
+.equ CURRENT_BOARD_OFFSET,             0x8029D67B
 
 # player data structure
 .equ PLAYER_STRUCT_BASE_OFFSET, 0x80290C98
@@ -9,12 +10,17 @@
 .equ IS_CPU_MASK_BIT,           0x20
 
 # custom save locations
-.equ BASE_SAVE_LOC,             0x8029D70A
-.equ MAX_DICE_ROLL_SAVE,        BASE_SAVE_LOC
-.equ COMPLETED_MINIGAMES_SAVE,  BASE_SAVE_LOC + 1
-.equ LOCK_JUMP_SAVE,            BASE_SAVE_LOC + 3
-.equ MAX_CAPSULE_SAVE,          BASE_SAVE_LOC + 4
-.equ MAX_COINS,                 BASE_SAVE_LOC + 5
-.equ MINIGAME_MAX_SPEED_SAVE,   BASE_SAVE_LOC + 6
-.equ BOUGHT_ITEMS_SAVE,         BASE_SAVE_LOC + 7
-.equ UNLOCKED_STAGES_SAVE,      BASE_SAVE_LOC + 11
+.equ MAX_DICE_ROLL_SAVE,                    0x8029D70A
+.equ COMPLETED_MINIGAMES_SAVE,              0x8029D70B
+.equ LOCK_JUMP_SAVE,                        0x8029D70D
+.equ MAX_CAPSULE_SAVE,                      0x8029D70E
+.equ MAX_COINS,                             0x8029D70F
+.equ MINIGAME_MAX_SPEED_SAVE,               0x8029D710
+.equ BOUGHT_ITEMS_SAVE,                     0x8029D711
+.equ UNLOCKED_STAGES_SAVE,                  0x8029D715
+.equ GRAND_CANAL_REACHED_SPACES_SAVE,       0x8029D71B # 15 bytes
+.equ PAGODA_PEAK_REACHED_SPACES_SAVE,       0x8029D72A # 11 bytes
+.equ PYRAMID_PARK_REACHED_SPACES_SAVE,      0x8029D735 # 16 bytes
+.equ WINDMILLVILLE_REACHED_SPACES_SAVE,     0x8029D745 # 16 bytes
+.equ NEON_HEIGHTS_REACHED_SPACES_SAVE,      0x8029D755 # 18 bytes
+.equ BOWSER_REACHED_SPACES_SAVE,            0x8029D767 # 16 bytes

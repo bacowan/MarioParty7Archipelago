@@ -50,6 +50,8 @@ class MarioParty7ProcedurePatch(APProcedurePatch):
                 set_minigame_sanity(iso)
             if patch_data["shop_sanity"]:
                 set_shop_sanity(iso, patch_data["shop_items"])
+            if patch_data["space_sanity"]:
+                set_space_sanity(iso)
             if patch_data["board_data"] is not None:
                 for (board, space_data) in patch_data["board_data"].items():
                     set_board_spaces(iso, board, space_data)
@@ -83,6 +85,10 @@ def set_locked_minigame_actions(iso: BinaryIO):
 def set_minigame_sanity(iso: BinaryIO):
     write_assembly("fix_minigame_selection_hook", iso)
     write_assembly("fix_minigame_selection", iso)
+
+def set_space_sanity(iso: BinaryIO):
+    write_assembly("write_reached_spaces", iso)
+    write_assembly("write_reached_spaces_hook", iso)
 
 def set_shop_sanity(iso: BinaryIO, patch_items: Dict[str, tuple[str, str]]):
     write_assembly("set_shop_items_hook", iso)
@@ -275,6 +281,7 @@ def write_json(world: "MarioParty7World", patch: MarioParty7ProcedurePatch) -> N
         "locked_minigame_actions": world.options.locked_minigame_actions.value,
         "minigame_sanity": world.options.minigame_sanity.value,
         "shop_sanity": world.options.shop_sanity.value,
+        "space_sanity": world.options.space_sanity.value,
         "board_data": boards,
         "shop_items": shop_items,
     }
