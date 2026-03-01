@@ -171,18 +171,15 @@ NEON_HEIGHTS_SPACE_IDS = [0x0, 0x1, 0x2, 0x4, 0x5, 0x6, 0x7, 0xa, 0xb, 0xc, 0xe,
 BOWSERS_ENCHANTED_INFERNO = [0x1, 0x2, 0x5, 0x6, 0x8, 0xa, 0xb, 0xc, 0xe, 0xf, 0x11, 0x12, 0x13, 0x15, 0x16, 0x18, 0x1a, 0x1c, 0x1e, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x33, 0x34, 0x36, 0x39, 0x45, 0x5f, 0x62, 0x70]
 
 # we use the duty-free shop text for archipelago item names
-ITEM_NAMES_BASE_ADDRESS =   0x4CEB2028
 SHOP_STAGE_ORDER =          ["Grand Canal", "Pagoda Peak", "Neon Heights", "Windmillville", "Bowser's Enchanted Inferno"]
 SHOP_HUT_ORDER =            ["Orb Hut 1", "Orb Hut 2"]
 SHOP_ITEM_ORDER =           ["Left Item", "Middle Item", "Right Item"]
 MAX_ITEM_NAME_LENGTH =      360 # based on the total space for text in this area averaged over 36 items (conservative estimate)
 
 # RAM Map
+ITEM_NAMES_BASE_ADDRESS =       0x4CEB2028
 RAM_LOCATION_P1_INFO =          0x80290c98
 RAM_LOCATION_P2_INFO =          0x80290da8
-
-COIN_OFFSET_FROM_PLAYER_LOCATION =      0x26
-CAPSULE_OFFSET_FROM_PLAYER_LOCATION =   0x6
 
 RAM_LOCATION_GRAND_CANAL_BEATEN_FLAG =                  0x80529ec3
 RAM_LOCATION_PAGODA_PEAK_BEATEN_FLAG =                  0x80529ec4
@@ -212,3 +209,10 @@ RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES =             0x8029D745
 RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES =              0x8029D755
 RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES = 0x8029D767
 
+# Data structure info
+COIN_OFFSET_FROM_PLAYER_LOCATION =      0x26
+CAPSULE_OFFSET_FROM_PLAYER_LOCATION =   0x6
+
+BEATEN_MINIGAME_SAVE_ORDER = ["warp pipe dreams", "weight for it", "mad props", "gimme a sign", "bridge work",
+                              "spin doctor", "hip hop drop", "royal rumpus", "light speed", "apes of wrath",
+                              "fish and cheeps", "camp ukiki"]

@@ -9,7 +9,8 @@ from worlds.mp7.data import RAM_LOCATION_GRAND_CANAL_BEATEN_FLAG, RAM_LOCATION_P
     GRAND_CANAL_SPACE_IDS, RAM_LOCATION_PAGODA_PEAK_REACHED_SPACES, RAM_LOCATION_PYRAMID_PARK_REACHED_SPACES, \
     RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES, RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES, \
     RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES, PAGODA_PEAK_SPACE_IDS, PYRAMID_PARK_SPACE_IDS, \
-    WINDMILLVILLE_SPACE_IDS, NEON_HEIGHTS_SPACE_IDS, BOWSERS_ENCHANTED_INFERNO
+    WINDMILLVILLE_SPACE_IDS, NEON_HEIGHTS_SPACE_IDS, BOWSERS_ENCHANTED_INFERNO, BEATEN_MINIGAME_SAVE_ORDER, \
+    RAM_LOCATION_COMPLETED_MINIGAMES
 from worlds.stardew_valley.stardew_rule import false_
 
 
@@ -23,6 +24,16 @@ def get_human_player_offset() -> int:
 def board_beaten(flag_location: int) -> Callable[[], bool]:
     def func() -> bool:
         return dolphin_memory_engine.read_byte(flag_location) == 1
+    return func
+
+def minigame_beaten(minigame_name: str) -> Callable[[], bool]:
+    minigame_index = BEATEN_MINIGAME_SAVE_ORDER.index(minigame_name)
+    def func() -> bool:
+        as_int = int.from_bytes(
+            dolphin_memory_engine.read_bytes(RAM_LOCATION_COMPLETED_MINIGAMES, minigame_index),
+            byteorder='big')
+        mask = 1 << minigame_index
+        return as_int & mask > 0
     return func
 
 def coins_in_wallet(target_coin_count: int) -> Callable[[], bool]:
@@ -64,6 +75,18 @@ location_handlers = {
     "Neon Heights Beaten": board_beaten(RAM_LOCATION_WINDMILLVILLE_BEATEN_FLAG),
     "Windmillville Beaten": board_beaten(RAM_LOCATION_NEON_HEIGHTS_BEATEN_FLAG),
     "Bowser's Enchanted Inferno Beaten": board_beaten(RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_BEATEN_FLAG),
+    "Warp Pipe Dreams Beaten": minigame_beaten("warp pipe dreams"),
+    "Weight For It Beaten": minigame_beaten("weight for it"),
+    "Mad Props Beaten": minigame_beaten("mad props"),
+    "Gimme a Sign Beaten": minigame_beaten("gimme a sign"),
+    "Bridge Work Beaten": minigame_beaten("bridge work"),
+    "Spin Doctor Beaten": minigame_beaten("spin doctor"),
+    "Hip Hop Drop Beaten": minigame_beaten("hip hop drop"),
+    "Royal Rumpus Beaten": minigame_beaten("royal rumpus"),
+    "Light Speed Beaten": minigame_beaten("light speed"),
+    "Apes of Wrath Beaten": minigame_beaten("apes of wrath"),
+    "Fish And Cheeps Beaten": minigame_beaten("fish and cheeps"),
+    "Camp Ukiki Beaten": minigame_beaten("camp ukiki"),
     "10 Coins in Wallet": coins_in_wallet(10),
     "20 Coins in Wallet": coins_in_wallet(20),
     "30 Coins in Wallet": coins_in_wallet(30),

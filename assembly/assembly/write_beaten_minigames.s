@@ -30,10 +30,10 @@ lbz     r_MINIGAME_INDEX, MINIGAME_INDEX_LOC@l (r19)
 
 # 0 index the minigames.
 # The minigame ids are 45-46, 50-54, 57-61, so we need to exclude the gaps
-li      r19, 47     # does this do anything? Is it supposed to be r15?
+li      r15, 47     # does this do anything? Is it supposed to be r15?
 cmplw   r18, r15
 blt     first_set          # 45-46
-li      r19, 55     # does this do anything? Is it supposed to be r15?
+li      r15, 55     # does this do anything? Is it supposed to be r15?
 cmplw   r18, r15
 blt     second_set         # 50-54
 
@@ -50,7 +50,7 @@ addi    r18, r18, -48
 set_end:
 
 # The completed minigames are stored at 0x81720003 and 0x81720004
-lis     r16, COMPLETED_MINIGAMES_SAVE@h
+lis     r16, COMPLETED_MINIGAMES_SAVE@ha
 lhz     r19, COMPLETED_MINIGAMES_SAVE@l(r16)
 
 # make a bitmask for the current minigame
@@ -64,7 +64,7 @@ or      r19, r19, r17
 srwi    r19, r19, 16
 
 # save it back
-sth     r19, 3(r16)
+sth     r19, COMPLETED_MINIGAMES_SAVE@l(r16)
 
 end:
 
