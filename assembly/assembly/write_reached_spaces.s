@@ -5,7 +5,7 @@
 .equ r_CURRENT_BOARD, r4
 
 # save registers
-stwu    r1, -24(r1)
+stwu    r1, -32(r1)
 
 stw     r4, 4(r1)
 stw     r5, 8(r1)
@@ -13,13 +13,13 @@ stw     r6, 12(r1)
 stw     r7, 16(r1)
 
 # Figure out what board we're on and set the base offset accordingly
-lis     r4, CURRENT_BOARD_OFFSET@h
+lis     r4, CURRENT_BOARD_OFFSET@ha
 lbz     r_CURRENT_BOARD, CURRENT_BOARD_OFFSET@l(r4)
 
 # Grand Canal
 cmpwi   r_CURRENT_BOARD, 0
 bne     check_pagoda_peak
-lis     r6, GRAND_CANAL_REACHED_SPACES_SAVE@h
+lis     r6, GRAND_CANAL_REACHED_SPACES_SAVE@ha
 ori     r_BOARD_OFFSET, r6, GRAND_CANAL_REACHED_SPACES_SAVE@l
 b       get_board_done
 
@@ -27,7 +27,7 @@ b       get_board_done
 check_pagoda_peak:
 cmpwi   r_CURRENT_BOARD, 1
 bne     check_pyramid_park
-lis     r6, PAGODA_PEAK_REACHED_SPACES_SAVE@h
+lis     r6, PAGODA_PEAK_REACHED_SPACES_SAVE@ha
 ori     r_BOARD_OFFSET, r6, PAGODA_PEAK_REACHED_SPACES_SAVE@l
 b       get_board_done
 
@@ -35,7 +35,7 @@ b       get_board_done
 check_pyramid_park:
 cmpwi   r_CURRENT_BOARD, 2
 bne     check_windmillville
-lis     r6, PYRAMID_PARK_REACHED_SPACES_SAVE@h
+lis     r6, PYRAMID_PARK_REACHED_SPACES_SAVE@ha
 ori     r_BOARD_OFFSET, r6, PYRAMID_PARK_REACHED_SPACES_SAVE@l
 b       get_board_done
 
@@ -43,7 +43,7 @@ b       get_board_done
 check_windmillville:
 cmpwi   r_CURRENT_BOARD, 3
 bne     check_neon_heights
-lis     r6, WINDMILLVILLE_REACHED_SPACES_SAVE@h
+lis     r6, WINDMILLVILLE_REACHED_SPACES_SAVE@ha
 ori     r_BOARD_OFFSET, r6, WINDMILLVILLE_REACHED_SPACES_SAVE@l
 b       get_board_done
 
@@ -51,13 +51,13 @@ b       get_board_done
 check_neon_heights:
 cmpwi   r_CURRENT_BOARD, 4
 bne     check_bowser
-lis     r6, NEON_HEIGHTS_REACHED_SPACES_SAVE@h
+lis     r6, NEON_HEIGHTS_REACHED_SPACES_SAVE@ha
 ori     r_BOARD_OFFSET, r6, NEON_HEIGHTS_REACHED_SPACES_SAVE@l
 b       get_board_done
 
 # Bower
 check_bowser:
-lis     r6, BOWSER_REACHED_SPACES_SAVE@h
+lis     r6, BOWSER_REACHED_SPACES_SAVE@ha
 ori     r_BOARD_OFFSET, r6, BOWSER_REACHED_SPACES_SAVE@l
 
 get_board_done:
@@ -74,7 +74,7 @@ slwi    r_WORD_OFFSET, r4, 2            # wordOffset = wordIndex * 4 (byte offse
 
 # load the word to be changed
 lwzx    r6, r_WORD_OFFSET, r_BOARD_OFFSET
-.equ    r_FLAGS, r6
+.equ    r_FLAGS, r4
 
 # set the new flag
 .equ r_NEW_FLAG, r7
