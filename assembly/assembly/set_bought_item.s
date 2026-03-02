@@ -80,6 +80,16 @@ cmpwi   r_CURRENT_SPACE, WINDMILLVILLE_RIGHT_ID
 beq     shop_selection_end
 slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
 
+# pyramid park top
+cmpwi   r_CURRENT_SPACE, PYRAMID_PARK_TOP_ID
+beq     shop_selection_end
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
+
+# pyramid park bottom
+cmpwi   r_CURRENT_SPACE, PYRAMID_PARK_BOTTOM_ID
+beq     shop_selection_end
+slwi    r_SHOP_MASK, r_SHOP_MASK, 3          # move the 3 bits to the next shop
+
 # bowser bottom
 cmpwi   r_CURRENT_SPACE, BOWSER_BOTTOM_ID
 beq     shop_selection_end

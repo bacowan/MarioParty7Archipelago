@@ -68,6 +68,11 @@ def unique_spaces(space_count: int) -> Callable[[], bool]:
         return count > space_count
     return func
 
+def bought_items(board_name: str, shop_index: int, item_index: int) -> Callable[[], bool]:
+    def func() -> bool:
+        return True
+    return func
+
 location_handlers = {
     "Grand Canal Beaten": board_beaten(RAM_LOCATION_GRAND_CANAL_BEATEN_FLAG),
     "Pagoda Peak Beaten": board_beaten(RAM_LOCATION_PAGODA_PEAK_BEATEN_FLAG),
@@ -114,7 +119,7 @@ location_handlers = {
     "260 Unique Spaces": unique_spaces(260),
     "280 Unique Spaces": unique_spaces(280),
     "300 Unique Spaces": unique_spaces(300),
-    # "Grand Canal Orb Hut 1 Left Item",
+    "Grand Canal Orb Hut 1 Left Item": bought_items("grand canal", 0, 0),
     # "Grand Canal Orb Hut 1 Middle Item",
     # "Grand Canal Orb Hut 1 Right Item",
     # "Grand Canal Orb Hut 2 Left Item",
@@ -138,6 +143,12 @@ location_handlers = {
     # "Windmillville Orb Hut 2 Left Item",
     # "Windmillville Orb Hut 2 Middle Item",
     # "Windmillville Orb Hut 2 Right Item",
+    # "Pyramid Park Orb Hut 1 Left Item",
+    # "Pyramid Park Orb Hut 1 Middle Item",
+    # "Pyramid Park Orb Hut 1 Right Item",
+    # "Pyramid Park Orb Hut 2 Left Item",
+    # "Pyramid Park Orb Hut 2 Middle Item",
+    # "Pyramid Park Orb Hut 2 Right Item",
     # "Bowser's Enchanted Inferno Orb Hut 1 Left Item",
     # "Bowser's Enchanted Inferno Orb Hut 1 Middle Item",
     # "Bowser's Enchanted Inferno Orb Hut 1 Right Item",

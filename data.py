@@ -173,10 +173,10 @@ NEON_HEIGHTS_SPACE_IDS = [0x0, 0x1, 0x2, 0x4, 0x5, 0x6, 0x7, 0xa, 0xb, 0xc, 0xe,
 BOWSERS_ENCHANTED_INFERNO = [0x1, 0x2, 0x5, 0x6, 0x8, 0xa, 0xb, 0xc, 0xe, 0xf, 0x11, 0x12, 0x13, 0x15, 0x16, 0x18, 0x1a, 0x1c, 0x1e, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30, 0x33, 0x34, 0x36, 0x39, 0x45, 0x5f, 0x62, 0x70]
 
 # we use the duty-free shop text for archipelago item names
-SHOP_STAGE_ORDER =          ["Grand Canal", "Pagoda Peak", "Neon Heights", "Windmillville", "Bowser's Enchanted Inferno"]
+SHOP_STAGE_ORDER =          ["Grand Canal", "Pagoda Peak", "Neon Heights", "Windmillville", "Pyramid Park", "Bowser's Enchanted Inferno"]
 SHOP_HUT_ORDER =            ["Orb Hut 1", "Orb Hut 2"]
 SHOP_ITEM_ORDER =           ["Left Item", "Middle Item", "Right Item"]
-MAX_ITEM_NAME_LENGTH =      360 # based on the total space for text in this area averaged over 36 items (conservative estimate)
+MAX_ITEM_NAME_LENGTH =      300 # based on the total space for text in this area averaged over 42 items (conservative estimate)
 
 # RAM Map
 ITEM_NAMES_BASE_ADDRESS =       0x4CEB2028
