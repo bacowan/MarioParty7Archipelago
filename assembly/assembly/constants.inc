@@ -9,6 +9,18 @@
 
 .equ IS_CPU_MASK_BIT,           0x20
 
+# shop IDs
+.equ GRAND_CANAL_LEFT_ID,       0x65
+.equ GRAND_CANAL_RIGHT_ID,      0x67
+.equ PAGODA_PEAK_BOTTOM_ID,     0x10
+.equ PAGODA_PEAK_TOP_ID,        0x46
+.equ NEON_HEIGHTS_LEFT_ID,      0x0F
+.equ NEON_HEIGHTS_RIGHT_ID,     0x77
+.equ WINDMILLVILLE_LEFT_ID,     0x5C
+.equ WINDMILLVILLE_RIGHT_ID,    0x18
+.equ BOWSER_BOTTOM_ID,          0x3B
+.equ BOWSER_TOP_ID,             0x85
+
 # custom save locations
 .equ MAX_DICE_ROLL_SAVE,                    0x8029D70A
 .equ COMPLETED_MINIGAMES_SAVE,              0x8029D70B

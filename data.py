@@ -73,6 +73,8 @@ ASSEMBLY_OFFSETS: Dict[str, int | List[int]] = {
     "set_shop_items":                   0x0002_2204,
     "write_reached_spaces_hook":        0x0017_A604,
     "write_reached_spaces":             0x0002_1D30,
+    "set_bought_item":                  0x0002_1230,
+    "set_bought_item_hook":             0x0018_4748,
 }
 
 FST_OFFSETS: Dict[str, int] = {

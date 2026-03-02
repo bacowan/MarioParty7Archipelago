@@ -27,3 +27,5 @@ lock_initial_board,349B05E4,804e0b18
 lock_initial_board,349B0CD4,804e0b18
 write_reached_spaces_hook,17A604,8015d564
 write_reached_spaces,21D30,80004A30
+set_bought_item_hook,184748,801676a8
+set_bought_item,21230,80003F30

@@ -93,6 +93,8 @@ def set_space_sanity(iso: BinaryIO):
 def set_shop_sanity(iso: BinaryIO, patch_items: Dict[str, tuple[str, str]]):
     write_assembly("set_shop_items_hook", iso)
     write_assembly("set_shop_items", iso)
+    write_assembly("set_shop_items_hook", iso)
+    write_assembly("set_shop_items", iso)
 
     # set item names
     item_name_offset_address = ITEM_NAMES_BASE_ADDRESS
