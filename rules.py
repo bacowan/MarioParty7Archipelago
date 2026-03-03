@@ -89,6 +89,20 @@ def set_shop_sanity_rules(world: MultiWorld, options: MarioParty7Options, player
     add_rule(world.get_location("Windmillville Orb Hut 2 Right Item", player),
              lambda state: state.has("Windmillville Key", player) and can_roll_at_least(10, options, state, player))
 
+    # Pyramid Park
+    add_rule(world.get_location("Pyramid Park Orb Hut 1 Left Item", player),
+             lambda state: state.has("Pyramid Park Key", player) and can_roll_at_least(2, options, state, player))
+    add_rule(world.get_location("Pyramid Park Orb Hut 1 Middle Item", player),
+             lambda state: state.has("Pyramid Park Key", player) and can_roll_at_least(2, options, state, player))
+    add_rule(world.get_location("Pyramid Park Orb Hut 1 Right Item", player),
+             lambda state: state.has("Pyramid Park Key", player) and can_roll_at_least(2, options, state, player))
+    add_rule(world.get_location("Pyramid Park Orb Hut 2 Left Item", player),
+             lambda state: state.has("Pyramid Park Key", player) and can_roll_at_least(10, options, state, player))
+    add_rule(world.get_location("Pyramid Park Orb Hut 2 Middle Item", player),
+             lambda state: state.has("Pyramid Park Key", player) and can_roll_at_least(10, options, state, player))
+    add_rule(world.get_location("Pyramid Park Orb Hut 2 Right Item", player),
+             lambda state: state.has("Pyramid Park Key", player) and can_roll_at_least(10, options, state, player))
+
     # Bowser's Enchanted Inferno
     add_rule(world.get_location("Bowser's Enchanted Inferno Orb Hut 1 Left Item", player),
              lambda state: state.has("Bowser's Enchanted Inferno Key", player))

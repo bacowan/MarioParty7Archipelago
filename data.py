@@ -51,30 +51,30 @@ SPACE_DATA_INDEXES: Dict[str, int] = {
 }
 
 ASSEMBLY_OFFSETS: Dict[str, int | List[int]] = {
-    "fix_die_max_hook":                 0x001A_9D24,
-    "fix_die_max":                      0x0002_0924,
-    "max_coin_count_1_hook":            0x0018_3D70,
-    "max_coin_count_1":                 0x0002_09B8,
-    "max_coin_count_2_hook":            0x0005_BF34,
-    "max_coin_count_2":                 0x0002_0A44,
-    "max_capsule_hook":                 0x0018_4658,
-    "max_capsule":                      0x0002_21C0,
-    "set_max_speed_hook":               0x0009_D728,
-    "set_max_speed":                    0x0002_2520,
-    "lock_jump_hook":                   0x000E_4ECC,
-    "lock_jump":                        0x0002_23B8,
-    "lock_jump_hook_2":                 0x000B_F7D0,
-    "lock_jump_2":                      0x0002_242C,
-    "unlock_boards":                    [0x349B_D26C, 0x349B_D95C],
-    "bowsers_inferno_lock_override":    [0x349B_D300, 0x349B_D9F0],
-    "fix_minigame_selection_hook":      0x0023_D6B8,
-    "fix_minigame_selection":           0x0002_2034,
-    "set_shop_items_hook":              0x0023_4234,
-    "set_shop_items":                   0x0002_2204,
-    "write_reached_spaces_hook":        0x0017_A604,
-    "write_reached_spaces":             0x0002_1D30,
-    "set_bought_item":                  0x0002_1230,
-    "set_bought_item_hook":             0x0018_4748,
+    "fix_die_max_hook":                 0x001A_9D24,                # RAM 0x8018cc84
+    "fix_die_max":                      0x0002_0924,                # RAM 0x80003624
+    "max_coin_count_1_hook":            0x0018_3D70,                # RAM 0x80166cd0
+    "max_coin_count_1":                 0x0002_09B8,                # RAM 0x800036B8
+    "max_coin_count_2_hook":            0x0005_BF34,                # RAM 0x8003ee94
+    "max_coin_count_2":                 0x0002_0A44,                # RAM 0x80003744
+    "max_capsule_hook":                 0x0018_4658,                # RAM 0x801675B8
+    "max_capsule":                      0x0002_21C0,                # RAM 0x80004EC0
+    "set_max_speed_hook":               0x0009_D728,                # RAM 0x80080688
+    "set_max_speed":                    0x0002_2520,                # RAM 0x80005220
+    "lock_jump_hook":                   0x000E_4ECC,                # RAM 0x800C7E2C
+    "lock_jump":                        0x0002_2110,                # RAM 0x8000512C
+    "lock_jump_hook_2":                 0x000B_F7D0,                # RAM 0x800a2730
+    "lock_jump_2":                      0x0002_242C,                # RAM 0x8000512C
+    "unlock_boards":                    [0x349B_D26C, 0x349B_D95C], # RAM 0x804ed7a0
+    "bowsers_inferno_lock_override":    [0x349B_D300, 0x349B_D9F0], # RAM 0x804ed834
+    "fix_minigame_selection_hook":      0x0023_D6B8,                # RAM 0x80220618
+    "fix_minigame_selection":           0x0002_2034,                # RAM 0x80004D34
+    "set_shop_items_hook":              0x0023_4234,                # RAM 0x80217194
+    "set_shop_items":                   0x0002_2204,                # RAM 0x80004f04
+    "write_reached_spaces_hook":        0x0017_A604,                # RAM 0x8015d564
+    "write_reached_spaces":             0x0002_1D30,                # RAM 0x80004A30
+    "set_bought_item":                  0x0002_1230,                # RAM 0x801676a8
+    "set_bought_item_hook":             0x0018_4748,                # RAM 0x80003F30
 }
 
 FST_OFFSETS: Dict[str, int] = {
@@ -198,18 +198,18 @@ RAM_LOCATION_MAX_CAPSULES =                             0x8029D70E
 RAM_LOCATION_MAX_WALLET =                               0x8029D70F
 RAM_LOCATION_MAX_SPEED =                                0x8029D710
 RAM_LOCATION_BOUGHT_ITEMS =                             0x8029D711
-RAM_LOCATION_GRAND_CANAL_UNLOCK =                       0x8029D715
-RAM_LOCATION_PAGODA_PEAK_UNLOCK =                       0x8029D716
-RAM_LOCATION_PYRAMID_PARK_UNLOCK =                      0x8029D717
-RAM_LOCATION_WINDMILLVILLE_UNLOCK =                     0x8029D718
-RAM_LOCATION_NEON_HEIGHTS_UNLOCK =                      0x8029D719
-RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_UNLOCK =         0x8029D71A
-RAM_LOCATION_GRAND_CANAL_REACHED_SPACES =               0x8029D71B
-RAM_LOCATION_PAGODA_PEAK_REACHED_SPACES =               0x8029D72A
-RAM_LOCATION_PYRAMID_PARK_REACHED_SPACES =              0x8029D735
-RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES =             0x8029D745
-RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES =              0x8029D755
-RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES = 0x8029D767
+RAM_LOCATION_GRAND_CANAL_UNLOCK =                       0x8029D716
+RAM_LOCATION_PAGODA_PEAK_UNLOCK =                       0x8029D717
+RAM_LOCATION_PYRAMID_PARK_UNLOCK =                      0x8029D718
+RAM_LOCATION_WINDMILLVILLE_UNLOCK =                     0x8029D719
+RAM_LOCATION_NEON_HEIGHTS_UNLOCK =                      0x8029D71A
+RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_UNLOCK =         0x8029D71B
+RAM_LOCATION_GRAND_CANAL_REACHED_SPACES =               0x8029D71C
+RAM_LOCATION_PAGODA_PEAK_REACHED_SPACES =               0x8029D72B
+RAM_LOCATION_PYRAMID_PARK_REACHED_SPACES =              0x8029D736
+RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES =             0x8029D746
+RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES =              0x8029D756
+RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES = 0x8029D768
 
 # Data structure info
 COIN_OFFSET_FROM_PLAYER_LOCATION =      0x26

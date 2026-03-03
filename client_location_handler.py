@@ -10,7 +10,7 @@ from worlds.mp7.data import RAM_LOCATION_GRAND_CANAL_BEATEN_FLAG, RAM_LOCATION_P
     RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES, RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES, \
     RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES, PAGODA_PEAK_SPACE_IDS, PYRAMID_PARK_SPACE_IDS, \
     WINDMILLVILLE_SPACE_IDS, NEON_HEIGHTS_SPACE_IDS, BOWSERS_ENCHANTED_INFERNO, BEATEN_MINIGAME_SAVE_ORDER, \
-    RAM_LOCATION_COMPLETED_MINIGAMES
+    RAM_LOCATION_COMPLETED_MINIGAMES, RAM_LOCATION_BOUGHT_ITEMS, SHOP_STAGE_ORDER
 from worlds.stardew_valley.stardew_rule import false_
 
 
@@ -69,8 +69,10 @@ def unique_spaces(space_count: int) -> Callable[[], bool]:
     return func
 
 def bought_items(board_name: str, shop_index: int, item_index: int) -> Callable[[], bool]:
+    bit_index = 1 << (SHOP_STAGE_ORDER.index(board_name) * 3) << item_index
     def func() -> bool:
-        return True
+        saved_flags = dolphin_memory_engine.read_word(RAM_LOCATION_BOUGHT_ITEMS)
+        return saved_flags & bit_index > 0
     return func
 
 location_handlers = {
@@ -119,40 +121,40 @@ location_handlers = {
     "260 Unique Spaces": unique_spaces(260),
     "280 Unique Spaces": unique_spaces(280),
     "300 Unique Spaces": unique_spaces(300),
-    "Grand Canal Orb Hut 1 Left Item": bought_items("grand canal", 0, 0),
-    # "Grand Canal Orb Hut 1 Middle Item",
-    # "Grand Canal Orb Hut 1 Right Item",
-    # "Grand Canal Orb Hut 2 Left Item",
-    # "Grand Canal Orb Hut 2 Middle Item",
-    # "Grand Canal Orb Hut 2 Right Item",
-    # "Pagoda Peak Orb Hut 1 Left Item",
-    # "Pagoda Peak Orb Hut 1 Middle Item",
-    # "Pagoda Peak Orb Hut 1 Right Item",
-    # "Pagoda Peak Orb Hut 2 Left Item",
-    # "Pagoda Peak Orb Hut 2 Middle Item",
-    # "Pagoda Peak Orb Hut 2 Right Item",
-    # "Neon Heights Orb Hut 1 Left Item",
-    # "Neon Heights Orb Hut 1 Middle Item",
-    # "Neon Heights Orb Hut 1 Right Item",
-    # "Neon Heights Orb Hut 2 Left Item",
-    # "Neon Heights Orb Hut 2 Middle Item",
-    # "Neon Heights Orb Hut 2 Right Item",
-    # "Windmillville Orb Hut 1 Left Item",
-    # "Windmillville Orb Hut 1 Middle Item",
-    # "Windmillville Orb Hut 1 Right Item",
-    # "Windmillville Orb Hut 2 Left Item",
-    # "Windmillville Orb Hut 2 Middle Item",
-    # "Windmillville Orb Hut 2 Right Item",
-    # "Pyramid Park Orb Hut 1 Left Item",
-    # "Pyramid Park Orb Hut 1 Middle Item",
-    # "Pyramid Park Orb Hut 1 Right Item",
-    # "Pyramid Park Orb Hut 2 Left Item",
-    # "Pyramid Park Orb Hut 2 Middle Item",
-    # "Pyramid Park Orb Hut 2 Right Item",
-    # "Bowser's Enchanted Inferno Orb Hut 1 Left Item",
-    # "Bowser's Enchanted Inferno Orb Hut 1 Middle Item",
-    # "Bowser's Enchanted Inferno Orb Hut 1 Right Item",
-    # "Bowser's Enchanted Inferno Orb Hut 2 Left Item",
-    # "Bowser's Enchanted Inferno Orb Hut 2 Middle Item",
-    # "Bowser's Enchanted Inferno Orb Hut 2 Right Item"
+    "Grand Canal Orb Hut 1 Left Item": bought_items("Grand Canal", 0, 0),
+    "Grand Canal Orb Hut 1 Middle Item": bought_items("Grand Canal", 0, 1),
+    "Grand Canal Orb Hut 1 Right Item": bought_items("Grand Canal", 0, 2),
+    "Grand Canal Orb Hut 2 Left Item": bought_items("Grand Canal", 1, 0),
+    "Grand Canal Orb Hut 2 Middle Item": bought_items("Grand Canal", 1, 1),
+    "Grand Canal Orb Hut 2 Right Item": bought_items("Grand Canal", 1, 2),
+    "Pagoda Peak Orb Hut 1 Left Item": bought_items("Pagoda Peak", 0, 0),
+    "Pagoda Peak Orb Hut 1 Middle Item": bought_items("Pagoda Peak", 0, 1),
+    "Pagoda Peak Orb Hut 1 Right Item": bought_items("Pagoda Peak", 0, 2),
+    "Pagoda Peak Orb Hut 2 Left Item": bought_items("Pagoda Peak", 1, 0),
+    "Pagoda Peak Orb Hut 2 Middle Item": bought_items("Pagoda Peak", 1, 1),
+    "Pagoda Peak Orb Hut 2 Right Item": bought_items("Pagoda Peak", 1, 2),
+    "Neon Heights Orb Hut 1 Left Item": bought_items("Neon Heights", 0, 0),
+    "Neon Heights Orb Hut 1 Middle Item": bought_items("Neon Heights", 0, 1),
+    "Neon Heights Orb Hut 1 Right Item": bought_items("Neon Heights", 0, 2),
+    "Neon Heights Orb Hut 2 Left Item": bought_items("Neon Heights", 1, 0),
+    "Neon Heights Orb Hut 2 Middle Item": bought_items("Neon Heights", 1, 1),
+    "Neon Heights Orb Hut 2 Right Item": bought_items("Neon Heights", 1, 2),
+    "Windmillville Orb Hut 1 Left Item": bought_items("Windmillville", 0, 0),
+    "Windmillville Orb Hut 1 Middle Item": bought_items("Windmillville", 0, 1),
+    "Windmillville Orb Hut 1 Right Item": bought_items("Windmillville", 0, 2),
+    "Windmillville Orb Hut 2 Left Item": bought_items("Windmillville", 1, 0),
+    "Windmillville Orb Hut 2 Middle Item": bought_items("Windmillville", 1, 1),
+    "Windmillville Orb Hut 2 Right Item": bought_items("Windmillville", 1, 2),
+    "Pyramid Park Orb Hut 1 Left Item": bought_items("Pyramid Park", 0, 0),
+    "Pyramid Park Orb Hut 1 Middle Item": bought_items("Pyramid Park", 0, 1),
+    "Pyramid Park Orb Hut 1 Right Item": bought_items("Pyramid Park", 0, 2),
+    "Pyramid Park Orb Hut 2 Left Item": bought_items("Pyramid Park", 1, 0),
+    "Pyramid Park Orb Hut 2 Middle Item": bought_items("Pyramid Park", 1, 1),
+    "Pyramid Park Orb Hut 2 Right Item": bought_items("Pyramid Park", 1, 2),
+    "Bowser's Enchanted Inferno Orb Hut 1 Left Item": bought_items("Bowser's Enchanted Inferno", 0, 0),
+    "Bowser's Enchanted Inferno Orb Hut 1 Middle Item": bought_items("Bowser's Enchanted Inferno", 0, 1),
+    "Bowser's Enchanted Inferno Orb Hut 1 Right Item": bought_items("Bowser's Enchanted Inferno", 0, 2),
+    "Bowser's Enchanted Inferno Orb Hut 2 Left Item": bought_items("Bowser's Enchanted Inferno", 1, 0),
+    "Bowser's Enchanted Inferno Orb Hut 2 Middle Item": bought_items("Bowser's Enchanted Inferno", 1, 1),
+    "Bowser's Enchanted Inferno Orb Hut 2 Right Item": bought_items("Bowser's Enchanted Inferno", 1, 2)
 }

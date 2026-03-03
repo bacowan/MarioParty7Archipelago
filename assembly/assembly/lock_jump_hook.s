@@ -1,2 +1,2 @@
-# this will branch to 0x80005380
-b -0xC2D74
+# this will branch to 0x8000512c
+b -0xC301C

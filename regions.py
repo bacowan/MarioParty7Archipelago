@@ -77,6 +77,13 @@ def create_boards(world: MultiWorld, menu_region: Region, options: MarioParty7Op
         add_location("Windmillville Orb Hut 2 Middle Item", windmillville)
         add_location("Windmillville Orb Hut 2 Right Item", windmillville)
 
+        add_location("Pyramid Park Orb Hut 1 Left Item", pyramid_park)
+        add_location("Pyramid Park Orb Hut 1 Middle Item", pyramid_park)
+        add_location("Pyramid Park Orb Hut 1 Right Item", pyramid_park)
+        add_location("Pyramid Park Orb Hut 2 Left Item", pyramid_park)
+        add_location("Pyramid Park Orb Hut 2 Middle Item", pyramid_park)
+        add_location("Pyramid Park Orb Hut 2 Right Item", pyramid_park)
+
         add_location("Bowser's Enchanted Inferno Orb Hut 1 Left Item", bowsers_enchanted_inferno)
         add_location("Bowser's Enchanted Inferno Orb Hut 1 Middle Item", bowsers_enchanted_inferno)
         add_location("Bowser's Enchanted Inferno Orb Hut 1 Right Item", bowsers_enchanted_inferno)
