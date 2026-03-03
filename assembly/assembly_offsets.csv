@@ -23,8 +23,6 @@ lock_jump_hook,E4ECC,800C7E2C
 lock_jump,223B8,800050B8
 lock_jump_hook_2,BF7D0,800a2730
 lock_jump_2,2242C,8000512C
-lock_initial_board,349B05E4,804e0b18
-lock_initial_board,349B0CD4,804e0b18
 write_reached_spaces_hook,17A604,8015d564
 write_reached_spaces,21D30,80004A30
 set_bought_item_hook,184748,801676a8

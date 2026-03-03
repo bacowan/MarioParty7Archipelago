@@ -85,6 +85,8 @@ def set_locked_minigame_actions(iso: BinaryIO):
 def set_minigame_sanity(iso: BinaryIO):
     write_assembly("fix_minigame_selection_hook", iso)
     write_assembly("fix_minigame_selection", iso)
+    write_assembly("write_beaten_minigames_hook", iso)
+    write_assembly("write_beaten_minigames", iso)
 
 def set_space_sanity(iso: BinaryIO):
     write_assembly("write_reached_spaces", iso)
