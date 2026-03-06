@@ -16,8 +16,8 @@ from worlds.stardew_valley.stardew_rule import false_
 
 
 def get_human_player_offset() -> int:
-    player_1 = dolphin_memory_engine.read_word(RAM_LOCATION_P1_INFO)
-    if player_1 & 0x20: # this bit will be set for cpus but not humans
+    player_1 = dolphin_memory_engine.read_byte(RAM_LOCATION_P1_INFO)
+    if player_1 & 0x10: # this bit will be set for human but not cpu
         return RAM_LOCATION_P1_INFO
     else:
         return RAM_LOCATION_P2_INFO
@@ -41,7 +41,7 @@ def coins_in_wallet(target_coin_count: int) -> Callable[[], bool]:
     def func() -> bool:
         player_offset = get_human_player_offset()
         coin_offset = player_offset + COIN_OFFSET_FROM_PLAYER_LOCATION
-        coin_count = dolphin_memory_engine.read_word(coin_offset)
+        coin_count = int.from_bytes(dolphin_memory_engine.read_bytes(coin_offset, 2), byteorder='big')
         return coin_count >= target_coin_count
     return func
 
