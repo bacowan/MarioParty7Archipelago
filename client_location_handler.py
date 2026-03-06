@@ -1,3 +1,4 @@
+import math
 from typing import Callable, List
 
 import dolphin_memory_engine
@@ -48,19 +49,21 @@ def unique_spaces(space_count: int) -> Callable[[], bool]:
     def as_flags(values: List[int]) -> List[int]:
         return [1 << x for x in values]
 
+    def byte_count(values: List[int]) -> int:
+        return math.ceil(values[-1] / 8)
+
     landed_spaces_info = [
-        { 'offset': RAM_LOCATION_GRAND_CANAL_REACHED_SPACES, 'spaces': as_flags(GRAND_CANAL_SPACE_IDS) },
-        { 'offset': RAM_LOCATION_PAGODA_PEAK_REACHED_SPACES, 'spaces': as_flags(PAGODA_PEAK_SPACE_IDS) },
-        { 'offset': RAM_LOCATION_PYRAMID_PARK_REACHED_SPACES, 'spaces': as_flags(PYRAMID_PARK_SPACE_IDS) },
-        { 'offset': RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES, 'spaces': as_flags(WINDMILLVILLE_SPACE_IDS) },
-        { 'offset': RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES, 'spaces': as_flags(NEON_HEIGHTS_SPACE_IDS) },
-        { 'offset': RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES, 'spaces': as_flags(BOWSERS_ENCHANTED_INFERNO) },
+        { 'offset': RAM_LOCATION_GRAND_CANAL_REACHED_SPACES, 'spaces': as_flags(GRAND_CANAL_SPACE_IDS), 'byte_count': byte_count(GRAND_CANAL_SPACE_IDS) },
+        { 'offset': RAM_LOCATION_PAGODA_PEAK_REACHED_SPACES, 'spaces': as_flags(PAGODA_PEAK_SPACE_IDS), 'byte_count': byte_count(PAGODA_PEAK_SPACE_IDS) },
+        { 'offset': RAM_LOCATION_PYRAMID_PARK_REACHED_SPACES, 'spaces': as_flags(PYRAMID_PARK_SPACE_IDS), 'byte_count': byte_count(PYRAMID_PARK_SPACE_IDS) },
+        { 'offset': RAM_LOCATION_WINDMILLVILLE_REACHED_SPACES, 'spaces': as_flags(WINDMILLVILLE_SPACE_IDS), 'byte_count': byte_count(WINDMILLVILLE_SPACE_IDS) },
+        { 'offset': RAM_LOCATION_NEON_HEIGHTS_REACHED_SPACES, 'spaces': as_flags(NEON_HEIGHTS_SPACE_IDS), 'byte_count': byte_count(NEON_HEIGHTS_SPACE_IDS) },
+        { 'offset': RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES, 'spaces': as_flags(BOWSERS_ENCHANTED_INFERNO), 'byte_count': byte_count(BOWSERS_ENCHANTED_INFERNO) },
     ]
     def func() -> bool:
         count = 0
         for data in landed_spaces_info:
-            length = data['spaces'][-1] / 8
-            as_bytes = dolphin_memory_engine.read_bytes(data['offset'], length)
+            as_bytes = dolphin_memory_engine.read_bytes(data['offset'], data['byte_count'])
             as_int = int.from_bytes(as_bytes, byteorder='little')
             for space in data['spaces']:
                 if space & as_int > 0:
