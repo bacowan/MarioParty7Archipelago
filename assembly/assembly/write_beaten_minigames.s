@@ -22,7 +22,7 @@ lbz     r19, PLAYER_STRUCT_BASE_OFFSET@l(r19)
 
 # if it is a computer player, then skip to the end
 andi.   r19, r19, IS_CPU_MASK_BIT        # this bit will be set for CPUs but not human players
-bne     end
+beq     end
 
 # get the minigame id
 lis     r19, MINIGAME_INDEX_LOC@h         # 0x80291559 is the location of the minigame index
