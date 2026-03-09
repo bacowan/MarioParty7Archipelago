@@ -75,7 +75,7 @@ ASSEMBLY_OFFSETS: Dict[str, int | List[int]] = {
     "write_reached_spaces":             0x0002_1D30,                # RAM 0x80004A30
     "set_bought_item":                  0x0002_1230,                # RAM 0x801676a8
     "set_bought_item_hook":             0x0018_4748,                # RAM 0x80003F30
-    "write_beaten_minigames_hook":      0x0005_9768,                # RAM 0x8003c6c8
+    "write_beaten_minigames_hook":      0x0005_9768,                # RAM 0x8003C6C8
     "write_beaten_minigames":           0x0002_2720,                # RAM 0x80005420
 }
 

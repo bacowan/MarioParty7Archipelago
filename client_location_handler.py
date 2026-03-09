@@ -12,7 +12,6 @@ from worlds.mp7.data import RAM_LOCATION_GRAND_CANAL_BEATEN_FLAG, RAM_LOCATION_P
     RAM_LOCATION_BOWSERS_ENCHANTED_INFERNO_REACHED_SPACES, PAGODA_PEAK_SPACE_IDS, PYRAMID_PARK_SPACE_IDS, \
     WINDMILLVILLE_SPACE_IDS, NEON_HEIGHTS_SPACE_IDS, BOWSERS_ENCHANTED_INFERNO, BEATEN_MINIGAME_SAVE_ORDER, \
     RAM_LOCATION_COMPLETED_MINIGAMES, RAM_LOCATION_BOUGHT_ITEMS, SHOP_STAGE_ORDER
-from worlds.stardew_valley.stardew_rule import false_
 
 
 def get_human_player_offset() -> int:
@@ -31,7 +30,7 @@ def minigame_beaten(minigame_name: str) -> Callable[[], bool]:
     minigame_index = BEATEN_MINIGAME_SAVE_ORDER.index(minigame_name)
     def func() -> bool:
         as_int = int.from_bytes(
-            dolphin_memory_engine.read_bytes(RAM_LOCATION_COMPLETED_MINIGAMES, minigame_index),
+            dolphin_memory_engine.read_bytes(RAM_LOCATION_COMPLETED_MINIGAMES, 2),
             byteorder='big')
         mask = 1 << minigame_index
         return as_int & mask > 0
